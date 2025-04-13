@@ -140,5 +140,13 @@ export default {
   project: {
     hideDetails: "Hide details",
     awardsWon: "Awards won"
+  },
+  // SEO metadata section
+  app: {
+    name: "Joan Paneque"
+  },
+  meta: {
+    description: "Joan Paneque's Portfolio - Software Engineer specialized in web development with Laravel and Vue.js. Creator of robust and innovative web applications with real impact.",
+    keywords: "joan paneque, web developer, programmer, software engineer, portfolio, laravel, vue, javascript, php, web development, fullstack, web applications"
   }
 }; 

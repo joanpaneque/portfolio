@@ -4,9 +4,60 @@ import { onMounted, ref, watch, computed, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 import HeaderDropdown from "../Components/HeaderDropdown.vue";
 import FeaturedProject from "../Components/FeaturedProject.vue";
+import SeoHead from "../Components/Head.vue";
+
+// Definir la prop de locale que viene del servidor
+const props = defineProps<{
+  locale: string;
+}>();
 
 // Configuración de i18n
 const { t, locale, availableLocales } = useI18n();
+
+// Establecer el idioma cuando se monta el componente
+onMounted(() => {
+  // Usar el idioma proporcionado por el servidor
+  locale.value = props.locale;
+  localStorage.setItem("language", props.locale);
+  
+  // Añadir manejador para el evento popstate (cuando el usuario usa los botones de navegación)
+  window.addEventListener('popstate', handlePopState);
+});
+
+onUnmounted(() => {
+  // Eliminar el manejador cuando el componente se desmonta
+  window.removeEventListener('popstate', handlePopState);
+});
+
+// Función para manejar los cambios en la historia del navegador
+const handlePopState = () => {
+  // Extraer el idioma de la URL actual
+  const path = window.location.pathname;
+  const pathSegments = path.split('/').filter(segment => segment); // Elimina segmentos vacíos
+  
+  if (pathSegments.length > 0) {
+    const urlLang = pathSegments[0];
+    if (['es', 'en', 'fr', 'de', 'ca'].includes(urlLang)) {
+      // Si la URL contiene un idioma válido, actualizarlo
+      locale.value = urlLang;
+      localStorage.setItem("language", urlLang);
+    } else {
+      // Si no es un código de idioma reconocido, intentamos obtener el idioma del localStorage
+      const savedLang = localStorage.getItem("language");
+      if (savedLang && ['es', 'en', 'fr', 'de', 'ca'].includes(savedLang)) {
+        locale.value = savedLang;
+      } else {
+        // Si no hay idioma guardado o no es válido, usamos español por defecto
+        locale.value = 'es';
+        localStorage.setItem("language", 'es');
+      }
+    }
+  } else {
+    // URL raíz, en este caso no deberíamos hacer nada ya que la ruta raíz
+    // redirecciona automáticamente en el servidor
+    // pero por si acaso, mantenemos el idioma actual
+  }
+};
 
 // Contador de tiempo ahorrado para el proyecto Trueta
 const savedSeconds = ref(0);
@@ -163,8 +214,17 @@ const languageOptions = computed(() => {
 
 // Función para cambiar el idioma
 const changeLanguage = (lang: string) => {
+  // Cambiar el idioma en i18n
   locale.value = lang;
   localStorage.setItem("language", lang);
+  
+  // Construir la nueva URL según el idioma
+  const currentUrl = window.location.origin;
+  // Ahora todas las URLs incluyen el código de idioma, incluido el español
+  const newUrl = `${currentUrl}/${lang}`;
+  
+  // Cambiar la URL del navegador sin recargar la página
+  window.history.pushState({ path: newUrl }, '', newUrl);
 };
 
 // Watch para reiniciar la terminal cuando cambia el idioma
@@ -878,11 +938,14 @@ html {
 </style>
 
 <template>
+  <!-- Componente SEO Head -->
+  <SeoHead />
+
   <div
     class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300 relative overflow-hidden"
   >
     <!-- Círculos gradientes deformes en el fondo -->
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
       <!-- Círculo superior izquierda -->
       <div class="absolute -top-[10%] -left-[10%] w-[60%] h-[60%] bg-gradient-to-br from-blue-400/25 to-purple-500/25 dark:from-blue-500/30 dark:to-purple-600/30 rounded-full blur-[120px] animate-blob"></div>
       
@@ -910,16 +973,18 @@ html {
           ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-md py-3'
           : 'bg-transparent py-6',
       ]"
+      role="banner"
     >
       <div class="container mx-auto flex justify-between items-center">
         <div
           class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-700 dark:from-blue-400 dark:to-purple-500 font-extrabold transition-all duration-300"
           :class="{ 'scale-90': isScrolled }"
         >
-          Joan Paneque
+          <h1 class="sr-only">Joan Paneque - Portfolio</h1>
+          <a href="#" class="hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-sm" aria-label="Joan Paneque - Página principal">Joan Paneque</a>
         </div>
 
-        <div class="flex items-center space-x-4">
+        <nav class="flex items-center space-x-4" aria-label="Navegación principal">
           <!-- Language selector -->
           <HeaderDropdown
             :options="languageOptions"
@@ -931,8 +996,9 @@ html {
           <!-- Dark mode toggle -->
           <button
             @click="toggleDarkMode"
-            class="p-2 rounded-full bg-white/80 dark:bg-gray-800/80 backdrop-blur shadow-md hover:shadow-lg transition-all duration-300"
-            aria-label="Toggle dark mode"
+            class="p-2 rounded-full bg-white/80 dark:bg-gray-800/80 backdrop-blur shadow-md hover:shadow-lg transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            :aria-label="isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
+            :title="isDarkMode ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
           >
             <svg
               v-if="isDarkMode"
@@ -941,6 +1007,7 @@ html {
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
+              aria-hidden="true"
             >
               <path
                 stroke-linecap="round"
@@ -956,6 +1023,7 @@ html {
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
+              aria-hidden="true"
             >
               <path
                 stroke-linecap="round"
@@ -965,17 +1033,18 @@ html {
               />
             </svg>
           </button>
-        </div>
+        </nav>
       </div>
     </header>
 
-    <main class="container mx-auto px-4 pb-20 pt-24">
+    <main class="container mx-auto px-4 pb-20 pt-24" role="main">
       <!-- Hero Section -->
-      <section class="py-16 md:py-24">
+      <section class="py-16 md:py-24" aria-labelledby="hero-title">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <!-- Orden en escritorio normal (1º texto, 2º imagen), en móvil invertido (1º imagen, 2º texto) -->
           <div class="space-y-6 order-2 md:order-1">
-            <h1
+            <h2
+              id="hero-title"
               class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 dark:text-white"
             >
               {{ t("hero.greeting") }}
@@ -984,14 +1053,15 @@ html {
                 >{{ t("hero.title") }}</span
               >
               {{ t("hero.specialization") }}
-            </h1>
+            </h2>
             <p class="text-lg text-gray-600 dark:text-gray-300">
               {{ t("hero.description") }}
             </p>
             <div>
               <a
                 href="#featured-projects"
-                class="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
+                class="inline-flex items-center px-6 py-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                aria-label="Ver proyectos destacados"
               >
                 {{ t("cta.viewProjects") }}
                 <svg
@@ -1000,6 +1070,7 @@ html {
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
+                  aria-hidden="true"
                 >
                   <path
                     stroke-linecap="round"
@@ -1031,6 +1102,7 @@ html {
                   :style="{
                     transform: 'translateZ(15px)',
                   }"
+                  aria-hidden="true"
                 ></div>
 
                 <!-- Patrón de cuadrícula (grid) tech con mayor visibilidad -->
@@ -1039,6 +1111,7 @@ html {
                   :style="{
                     transform: 'translateZ(25px)',
                   }"
+                  aria-hidden="true"
                 ></div>
               </div>
 
@@ -1047,12 +1120,15 @@ html {
                 class="relative h-full flex items-center justify-center z-10 image-wrapper rounded-3xl overflow-hidden transition-transform duration-200 ease-out"
               >
                 <img
-                  src="/uploads/joan.png"
-                  alt="Joan - Desarrollador Fullstack"
+                  src="/uploads/joan.webp"
+                  alt="Joan Paneque - Desarrollador Fullstack"
                   class="w-full object-cover rounded-xl drop-shadow-2xl max-h-[70vh] layer-3d transition-transform duration-200 ease-out"
                   :style="{
                     transform: 'translateZ(35px)',
                   }"
+                  width="500"
+                  height="600"
+                  loading="eager"
                 />
               </div>
             </div>
@@ -1061,11 +1137,12 @@ html {
       </section>
 
       <!-- About Me Section - Versión disruptiva -->
-      <section class="py-16 relative overflow-hidden">
+      <section class="py-16 relative overflow-hidden" aria-labelledby="about-title">
         <!-- Partículas flotantes de fondo - eliminadas para un diseño más limpio -->
 
         <div class="max-w-7xl mx-auto px-4 relative z-10">
           <h2
+            id="about-title"
             class="text-3xl sm:text-4xl font-bold mb-8 text-center text-gray-800 dark:text-white bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-700 dark:from-blue-400 dark:to-purple-500 font-extrabold"
           >
             {{ t("sections.aboutMe") }}
@@ -1074,17 +1151,19 @@ html {
           <!-- Contenedor principal para desktop con efecto glassmorphism -->
           <div class="grid grid-cols-1 md:grid-cols-5 gap-6 items-stretch">
             <!-- Terminal interactiva (a la izquierda en desktop, más amplia) -->
-            <div class="md:col-span-2">
+            <aside class="md:col-span-2" aria-label="Terminal interactiva">
               <div
                 class="flex flex-col relative rounded-lg overflow-hidden border border-white/10 bg-black/85 shadow-[0_10px_25px_-5px_rgba(0,0,0,0.3),_0_10px_10px_-5px_rgba(0,0,0,0.2)]"
                 style="height: 550px;"
+                role="region"
+                aria-label="Terminal de comandos"
               >
                 <div
                   class="flex items-center h-9 flex-shrink-0 px-4 py-2 bg-gradient-to-r from-gray-600 to-gray-700 dark:from-gray-800 dark:to-gray-900"
                 >
-                  <div class="h-3 w-3 rounded-full bg-red-500 mr-1.5"></div>
-                  <div class="h-3 w-3 rounded-full bg-yellow-500 mr-1.5"></div>
-                  <div class="h-3 w-3 rounded-full bg-green-500 mr-1.5"></div>
+                  <span class="h-3 w-3 rounded-full bg-red-500 mr-1.5" aria-hidden="true"></span>
+                  <span class="h-3 w-3 rounded-full bg-yellow-500 mr-1.5" aria-hidden="true"></span>
+                  <span class="h-3 w-3 rounded-full bg-green-500 mr-1.5" aria-hidden="true"></span>
                   <div class="ml-4 text-sm text-white font-medium">joan@portfolio:~</div>
                 </div>
                 <div
@@ -1093,6 +1172,8 @@ html {
                   <div
                     ref="terminalRef"
                     class="p-4 flex-1 leading-tight overflow-y-auto h-full max-h-full bg-gray-900 text-sm text-green-400 font-mono terminal-scrollbar"
+                    tabindex="0"
+                    aria-live="polite"
                   >
                     <!-- Líneas de la terminal -->
                     <div
@@ -1124,6 +1205,7 @@ html {
                       <div
                         v-if="index === terminalLines.length - 1"
                         class="inline-flex items-start h-4 w-2 mt-px relative"
+                        aria-hidden="true"
                       >
                         <span
                           class="absolute top-0 left-0 block w-2 h-4 bg-[#A8FF60] terminal-cursor"
@@ -1137,66 +1219,86 @@ html {
                     class="absolute bottom-4 right-4 bg-[rgba(20,20,20,0.95)] text-[#A8FF60] text-xs py-2 px-3 rounded-md cursor-pointer opacity-0 transition-all duration-300 z-[30] font-mono shadow-lg border border-[rgba(168,255,96,0.3)] flex items-center gap-1.5 pointer-events-auto hover:bg-[rgba(30,30,30,0.98)] hover:border-[rgba(168,255,96,0.5)] transform hover:scale-105"
                     :class="{ 'opacity-100': userScrolled && !isAtBottom }"
                     @click="scrollToBottom"
+                    aria-label="Desplazarse al final"
+                    tabindex="0"
                   >
                     <span
                       class="inline-block w-1.5 h-1.5 bg-[#A8FF60] rounded-full blinking-dot"
+                      aria-hidden="true"
                     ></span>
                     <span>Nuevo output</span>
                   </div>
                 </div>
               </div>
-            </div>
+            </aside>
 
             <!-- Nuevo contenido "Sobre mí" con diseño atractivo -->
-            <div class="md:col-span-3 relative" style="height: 550px;">
+            <article class="md:col-span-3 relative" style="height: 550px;">
               <!-- Fondo con gradiente y efecto glassmorphism -->
-              <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-600/10 dark:from-blue-500/10 dark:to-purple-600/20 backdrop-blur-md rounded-2xl"></div>
-              
-              <!-- Formas geométricas decorativas eliminadas para un diseño más limpio -->
+              <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-600/10 dark:from-blue-500/10 dark:to-purple-600/20 backdrop-blur-md rounded-2xl" aria-hidden="true"></div>
               
               <!-- Contenido principal -->
               <div class="relative h-full z-10 p-6 overflow-y-auto terminal-scrollbar"
                    style="height: 100%; max-height: 550px;"
+                   tabindex="0"
               >
                 <!-- Cabecera "Sobre mí" -->
-                <div class="flex items-center mb-6">
-                  <div class="p-2 bg-blue-100 dark:bg-blue-500/20 rounded-lg mr-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <header class="flex items-center mb-6">
+                  <div class="p-2 bg-blue-100 dark:bg-blue-500/20 rounded-lg mr-4" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                   </div>
-                  <h3 class="text-2xl font-bold text-gray-800 dark:text-white">{{ t("profile.aboutMe") }}</h3>
-                </div>
+                  <h3 id="about-subtitle" class="text-2xl font-bold text-gray-800 dark:text-white">{{ t("profile.aboutMe") }}</h3>
+                </header>
                 
                 <!-- Sistema de pestañas -->
-                <div class="mb-6">
+                <nav class="mb-6" role="tablist" aria-labelledby="about-subtitle">
                   <div class="flex border-b border-gray-200 dark:border-gray-700">
                     <button 
                       @click="activeTab = 'about'" 
-                      class="py-2 px-4 focus:outline-none transition-colors duration-200"
+                      class="py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
                       :class="activeTab === 'about' ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-500 font-medium' : 'text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-300'"
+                      role="tab"
+                      :aria-selected="activeTab === 'about'"
+                      aria-controls="about-panel"
+                      id="about-tab"
                     >
                       {{ t("tabs.about") || "Sobre mí" }}
                     </button>
                     <button 
                       @click="activeTab = 'stack'" 
-                      class="py-2 px-4 focus:outline-none transition-colors duration-200"
+                      class="py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
                       :class="activeTab === 'stack' ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-500 font-medium' : 'text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-300'"
+                      role="tab"
+                      :aria-selected="activeTab === 'stack'"
+                      aria-controls="stack-panel"
+                      id="stack-tab"
                     >
                       {{ t("tabs.techStack") || "Stack Tecnológico" }}
                     </button>
                     <button 
                       @click="activeTab = 'interests'" 
-                      class="py-2 px-4 focus:outline-none transition-colors duration-200"
+                      class="py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
                       :class="activeTab === 'interests' ? 'text-blue-600 dark:text-blue-400 border-b-2 border-blue-500 font-medium' : 'text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-300'"
+                      role="tab"
+                      :aria-selected="activeTab === 'interests'"
+                      aria-controls="interests-panel"
+                      id="interests-tab"
                     >
                       {{ t("tabs.interests") || "Intereses" }}
                     </button>
                   </div>
-                </div>
+                </nav>
                 
                 <!-- Contenido de pestaña: Sobre mí -->
-                <div v-if="activeTab === 'about'" class="animate-fadeIn">
+                <div 
+                  v-if="activeTab === 'about'" 
+                  class="animate-fadeIn"
+                  role="tabpanel"
+                  id="about-panel"
+                  aria-labelledby="about-tab"
+                >
                   <div class="bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm p-5 rounded-xl shadow-sm border border-white/20 dark:border-gray-600/20">
                     <p class="text-gray-700 dark:text-gray-200 mb-4">
                       {{ t("sections.aboutDescription") }}
@@ -1208,7 +1310,13 @@ html {
                 </div>
                 
                 <!-- Contenido de pestaña: Stack tecnológico -->
-                <div v-if="activeTab === 'stack'" class="animate-fadeIn">
+                <div 
+                  v-if="activeTab === 'stack'" 
+                  class="animate-fadeIn"
+                  role="tabpanel"
+                  id="stack-panel"
+                  aria-labelledby="stack-tab"
+                >
                   <!-- Categorías de tecnologías -->
                   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <!-- Frontend -->
@@ -1292,81 +1400,92 @@ html {
                 </div>
                 
                 <!-- Contenido de pestaña: Intereses -->
-                <div v-if="activeTab === 'interests'" class="animate-fadeIn">
+                <div 
+                  v-if="activeTab === 'interests'" 
+                  class="animate-fadeIn"
+                  role="tabpanel"
+                  id="interests-panel"
+                  aria-labelledby="interests-tab"
+                >
                   <div class="bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm p-5 rounded-xl mb-6 shadow-sm border border-white/20 dark:border-gray-600/20">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div class="flex items-start">
-                        <div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-500/20 flex items-center justify-center flex-shrink-0 mr-4">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-500/20 flex items-center justify-center flex-shrink-0 mr-4" aria-hidden="true">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                           </svg>
                         </div>
                         <div>
-                          <h5 class="font-medium text-gray-800 dark:text-white mb-1">{{ t("interests.running") || "Correr" }}</h5>
-                          <p class="text-sm text-gray-600 dark:text-gray-300">{{ t("interests.runningDesc") || "Me encanta correr para mantenerme en forma, despejar la mente y establecer nuevos retos personales." }}</p>
+                          <dt class="font-medium text-gray-800 dark:text-white mb-1">{{ t("interests.running") || "Correr" }}</dt>
+                          <dd class="text-sm text-gray-600 dark:text-gray-300">{{ t("interests.runningDesc") || "Me encanta correr para mantenerme en forma, despejar la mente y establecer nuevos retos personales." }}</dd>
                         </div>
                       </div>
                       
                       <div class="flex items-start">
-                        <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center flex-shrink-0 mr-4">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center flex-shrink-0 mr-4" aria-hidden="true">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                           </svg>
                         </div>
                         <div>
-                          <h5 class="font-medium text-gray-800 dark:text-white mb-1">{{ t("interests.ai") || "Inteligencia Artificial" }}</h5>
-                          <p class="text-sm text-gray-600 dark:text-gray-300">{{ t("interests.aiDesc") || "Estoy fascinado por los avances en IA y me gusta experimentar con herramientas y modelos de aprendizaje automático." }}</p>
+                          <dt class="font-medium text-gray-800 dark:text-white mb-1">{{ t("interests.ai") || "Inteligencia Artificial" }}</dt>
+                          <dd class="text-sm text-gray-600 dark:text-gray-300">{{ t("interests.aiDesc") || "Estoy fascinado por los avances en IA y me gusta experimentar con herramientas y modelos de aprendizaje automático." }}</dd>
                         </div>
                       </div>
                       
                       <div class="flex items-start">
-                        <div class="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-500/20 flex items-center justify-center flex-shrink-0 mr-4">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div class="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-500/20 flex items-center justify-center flex-shrink-0 mr-4" aria-hidden="true">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                         </div>
                         <div>
-                          <h5 class="font-medium text-gray-800 dark:text-white mb-1">{{ t("interests.entrepreneurship") || "Emprendimiento" }}</h5>
-                          <p class="text-sm text-gray-600 dark:text-gray-300">{{ t("interests.entrepreneurshipDesc") || "Disfruto convirtiendo ideas innovadoras en proyectos viables y aprendiendo sobre desarrollo de negocios." }}</p>
+                          <dt class="font-medium text-gray-800 dark:text-white mb-1">{{ t("interests.entrepreneurship") || "Emprendimiento" }}</dt>
+                          <dd class="text-sm text-gray-600 dark:text-gray-300">{{ t("interests.entrepreneurshipDesc") || "Disfruto convirtiendo ideas innovadoras en proyectos viables y aprendiendo sobre desarrollo de negocios." }}</dd>
                         </div>
                       </div>
                       
                       <div class="flex items-start">
-                        <div class="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-500/20 flex items-center justify-center flex-shrink-0 mr-4">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div class="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-500/20 flex items-center justify-center flex-shrink-0 mr-4" aria-hidden="true">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 104 0 2 2 0 012-2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                         </div>
                         <div>
-                          <h5 class="font-medium text-gray-800 dark:text-white mb-1">{{ t("interests.traveling") || "Traveling" }}</h5>
-                          <p class="text-sm text-gray-600 dark:text-gray-300">{{ t("interests.travelingDesc") || "Viajar me permite conectar con diferentes culturas y ampliar mi perspectiva global." }}</p>
+                          <dt class="font-medium text-gray-800 dark:text-white mb-1">{{ t("interests.traveling") || "Traveling" }}</dt>
+                          <dd class="text-sm text-gray-600 dark:text-gray-300">{{ t("interests.travelingDesc") || "Viajar me permite conectar con diferentes culturas y ampliar mi perspectiva global." }}</dd>
                         </div>
                       </div>
-                    </div>
+                    </dl>
                   </div>
                   
-                  <div class="flex justify-center">
-                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-gray-700 dark:text-gray-200">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <figure class="flex justify-center">
+                    <blockquote class="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-gray-700 dark:text-gray-200">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
-                      <span>{{ t("interests.quote") || "La curiosidad es el motor que impulsa mi desarrollo profesional y personal" }}</span>
-                    </div>
-                  </div>
+                      <p>{{ t("interests.quote") || "La curiosidad es el motor que impulsa mi desarrollo profesional y personal" }}</p>
+                    </blockquote>
+                  </figure>
                 </div>
               </div>
-            </div>
+            </article>
           </div>
         </div>
       </section>
 
       <!-- Featured Projects -->
-      <section id="featured-projects" class="py-16">
-        <h2 class="text-3xl sm:text-4xl font-bold mb-8 text-center text-gray-800 dark:text-white bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-700 dark:from-blue-400 dark:to-purple-500 font-extrabold">
+      <section id="featured-projects" class="py-16" aria-labelledby="projects-title">
+        <h2 
+          id="projects-title"
+          class="text-3xl sm:text-4xl font-bold mb-8 text-center text-gray-800 dark:text-white bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-700 dark:from-blue-400 dark:to-purple-500 font-extrabold"
+        >
           {{ t("sections.featuredProjects") }}
         </h2>
         <div class="max-w-7xl mx-auto px-4">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start"
+               role="list"
+          >
             <!-- Project Trueta - NUEVO DISEÑO MODERNO Y DISRUPTIVO -->
             <FeaturedProject
               :title="t('projects.projectTrueta')"
@@ -1573,93 +1692,94 @@ html {
       </section>
 
       <!-- Services -->
-      <section class="py-16">
-        <h2 class="text-3xl sm:text-4xl font-bold mb-8 text-center text-gray-800 dark:text-white bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-700 dark:from-blue-400 dark:to-purple-500 font-extrabold">
+      <section class="py-16" aria-labelledby="services-title">
+        <h2 id="services-title" class="text-3xl sm:text-4xl font-bold mb-8 text-center text-gray-800 dark:text-white bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-700 dark:from-blue-400 dark:to-purple-500 font-extrabold">
           {{ t("sections.services") }}
         </h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <!-- Web Development -->
-          <div
-            class="bg-gradient-to-br from-blue-500/10 to-indigo-500/10 dark:from-blue-800/20 dark:to-indigo-800/20 backdrop-blur-sm p-6 rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
-          >
-            <div class="bg-blue-100 dark:bg-blue-900/50 p-3 rounded-xl w-fit mb-4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-8 w-8 text-blue-600 dark:text-blue-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-                />
-              </svg>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8" role="list">
+          <!-- Service items as list items -->
+          <div class="bg-white/40 dark:bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-gray-200/80 dark:border-white/10 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02] group relative overflow-hidden" role="listitem">
+            <!-- Decorative elements -->
+            <div class="absolute -right-12 -top-12 w-24 h-24 rounded-full bg-blue-300/20 dark:bg-blue-400/10 blur-2xl group-hover:bg-blue-300/30 dark:group-hover:bg-blue-400/20 transition-all duration-500" aria-hidden="true"></div>
+            <div class="absolute -left-12 -bottom-12 w-24 h-24 rounded-full bg-purple-300/20 dark:bg-purple-400/10 blur-2xl group-hover:bg-purple-300/30 dark:group-hover:bg-purple-400/20 transition-all duration-500" aria-hidden="true"></div>
+            
+            <!-- Service content -->
+            <div class="flex flex-col h-full relative z-10">
+              <div class="w-14 h-14 flex items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 mb-4" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">{{ t("services.webDevelopment.title") }}</h3>
+              <p class="text-gray-700 dark:text-gray-300 mb-4 flex-grow">{{ t("services.webDevelopment.description") }}</p>
+              <div class="flex flex-wrap gap-2 mt-auto">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300">
+                  {{ t("services.webDevelopment.tags.0") }}
+                </span>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 dark:bg-indigo-900/40 text-indigo-800 dark:text-indigo-300">
+                  {{ t("services.webDevelopment.tags.1") }}
+                </span>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-300">
+                  {{ t("services.webDevelopment.tags.2") }}
+                </span>
+              </div>
             </div>
-            <h3 class="text-xl font-bold mb-2 text-gray-800 dark:text-white">
-              {{ t("services.webDev") }}
-            </h3>
-            <p class="text-gray-600 dark:text-gray-300">
-              {{ t("services.webDevDescription") }}
-            </p>
           </div>
 
-          <!-- UI/UX Design -->
-          <div
-            class="bg-gradient-to-br from-purple-500/10 to-pink-500/10 dark:from-purple-800/20 dark:to-pink-800/20 backdrop-blur-sm p-6 rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
-          >
-            <div class="bg-purple-100 dark:bg-purple-900/50 p-3 rounded-xl w-fit mb-4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-8 w-8 text-purple-600 dark:text-purple-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
-                />
-              </svg>
+          <div class="bg-white/40 dark:bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-gray-200/80 dark:border-white/10 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02] group relative overflow-hidden" role="listitem">
+            <!-- Decorative elements -->
+            <div class="absolute -right-12 -top-12 w-24 h-24 rounded-full bg-cyan-300/20 dark:bg-cyan-400/10 blur-2xl group-hover:bg-cyan-300/30 dark:group-hover:bg-cyan-400/20 transition-all duration-500" aria-hidden="true"></div>
+            <div class="absolute -left-12 -bottom-12 w-24 h-24 rounded-full bg-green-300/20 dark:bg-green-400/10 blur-2xl group-hover:bg-green-300/30 dark:group-hover:bg-green-400/20 transition-all duration-500" aria-hidden="true"></div>
+            
+            <!-- Service content -->
+            <div class="flex flex-col h-full relative z-10">
+              <div class="w-14 h-14 flex items-center justify-center rounded-xl bg-cyan-100 dark:bg-cyan-900/50 text-cyan-600 dark:text-cyan-400 mb-4" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">{{ t("services.uiDesign.title") }}</h3>
+              <p class="text-gray-700 dark:text-gray-300 mb-4 flex-grow">{{ t("services.uiDesign.description") }}</p>
+              <div class="flex flex-wrap gap-2 mt-auto">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-cyan-100 dark:bg-cyan-900/40 text-cyan-800 dark:text-cyan-300">
+                  {{ t("services.uiDesign.tags.0") }}
+                </span>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-teal-100 dark:bg-teal-900/40 text-teal-800 dark:text-teal-300">
+                  {{ t("services.uiDesign.tags.1") }}
+                </span>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300">
+                  {{ t("services.uiDesign.tags.2") }}
+                </span>
+              </div>
             </div>
-            <h3 class="text-xl font-bold mb-2 text-gray-800 dark:text-white">
-              {{ t("services.uiUxDesign") }}
-            </h3>
-            <p class="text-gray-600 dark:text-gray-300">
-              {{ t("services.uiUxDescription") }}
-            </p>
           </div>
 
-          <!-- API Integrations -->
-          <div
-            class="bg-gradient-to-br from-green-500/10 to-teal-500/10 dark:from-green-800/20 dark:to-teal-800/20 backdrop-blur-sm p-6 rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
-          >
-            <div class="bg-green-100 dark:bg-green-900/50 p-3 rounded-xl w-fit mb-4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-8 w-8 text-green-600 dark:text-green-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
+          <div class="bg-white/40 dark:bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-gray-200/80 dark:border-white/10 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.02] group relative overflow-hidden" role="listitem">
+            <!-- Decorative elements -->
+            <div class="absolute -right-12 -top-12 w-24 h-24 rounded-full bg-amber-300/20 dark:bg-amber-400/10 blur-2xl group-hover:bg-amber-300/30 dark:group-hover:bg-amber-400/20 transition-all duration-500" aria-hidden="true"></div>
+            <div class="absolute -left-12 -bottom-12 w-24 h-24 rounded-full bg-orange-300/20 dark:bg-orange-400/10 blur-2xl group-hover:bg-orange-300/30 dark:group-hover:bg-orange-400/20 transition-all duration-500" aria-hidden="true"></div>
+            
+            <!-- Service content -->
+            <div class="flex flex-col h-full relative z-10">
+              <div class="w-14 h-14 flex items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400 mb-4" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold mb-2 text-gray-900 dark:text-white">{{ t("services.aiSolutions.title") }}</h3>
+              <p class="text-gray-700 dark:text-gray-300 mb-4 flex-grow">{{ t("services.aiSolutions.description") }}</p>
+              <div class="flex flex-wrap gap-2 mt-auto">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300">
+                  {{ t("services.aiSolutions.tags.0") }}
+                </span>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 dark:bg-orange-900/40 text-orange-800 dark:text-orange-300">
+                  {{ t("services.aiSolutions.tags.1") }}
+                </span>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-300">
+                  {{ t("services.aiSolutions.tags.2") }}
+                </span>
+              </div>
             </div>
-            <h3 class="text-xl font-bold mb-2 text-gray-800 dark:text-white">
-              {{ t("services.apiIntegrations") }}
-            </h3>
-            <p class="text-gray-600 dark:text-gray-300">
-              {{ t("services.apiDescription") }}
-            </p>
           </div>
         </div>
       </section>

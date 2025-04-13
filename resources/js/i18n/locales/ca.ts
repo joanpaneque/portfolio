@@ -140,5 +140,12 @@ export default {
   project: {
     hideDetails: "Ocultar detalls",
     awardsWon: "Premis guanyats"
+  },
+  app: {
+    name: "Joan Paneque"
+  },
+  meta: {
+    description: "Portafoli de Joan Paneque - Enginyer de Software especialitzat en desenvolupament web amb Laravel i Vue.js. Creador d'aplicacions web robustes i innovadores amb impacte real.",
+    keywords: "joan paneque, desenvolupador web, programador, enginyer de software, portafoli, laravel, vue, javascript, php, desenvolupament web, fullstack, aplicacions web"
   }
 }; 

@@ -1,0 +1,929 @@
+<script setup lang="ts">
+import { Link, Head, usePage } from "@inertiajs/vue3";
+import { onMounted, ref, watch, computed, onUnmounted } from "vue";
+import { useI18n } from "vue-i18n";
+import HeaderDropdown from "../Components/HeaderDropdown.vue";
+import FeaturedProject from "../Components/FeaturedProject.vue";
+
+// Configuración de i18n
+const { t, locale, availableLocales } = useI18n();
+
+// Metadatos para SEO
+const pageTitle = "Joan Paneque - Desarrollador Web Full Stack";
+const pageDescription = "Portfolio profesional de Joan Paneque. Desarrollador web especializado en crear aplicaciones web modernas con Laravel, Vue.js, React y tecnologías cloud.";
+const pageKeywords = "joan paneque, desarrollador web, laravel, vue.js, react, portfolio, programador, fullstack, barcelona, españa";
+
+// JSON-LD para datos estructurados - Se agregará a nivel de app.blade.php
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Joan Paneque",
+  "url": "https://joanpaneque.dev",
+  "jobTitle": "Desarrollador Web Full Stack",
+  "image": "https://joanpaneque.dev/img/profile.jpg",
+  "sameAs": [
+    "https://github.com/jpaneque",
+    "https://linkedin.com/in/joanpaneque"
+  ],
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Joan Paneque Dev"
+  },
+  "knowsAbout": ["Laravel", "Vue.js", "React", "TypeScript", "PHP", "JavaScript", "Tailwind CSS"],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://joanpaneque.dev"
+  }
+};
+
+// Contador de tiempo ahorrado para el proyecto Trueta
+const savedSeconds = ref(0);
+const operacionesRealizadas = ref(0);
+
+// Contador de análisis de IA para el proyecto ObservaAI
+const observaAIAnalysisCount = ref(0);
+
+// Pestaña activa en la sección "Sobre mí"
+const activeTab = ref('about'); // Valores: 'about', 'stack', 'interests'
+
+// Galería de imágenes para el proyecto Trueta
+const galleryImages = [
+  { 
+    type: 'image', 
+    src: '/uploads/trueta/img1.jpg',
+    gradient: 'from-blue-400/20 to-cyan-400/20',
+    title: 'Presentación de la aplicación a los cirujanos'
+  },
+  { 
+    type: 'image', 
+    src: '/uploads/trueta/img2.png',
+    gradient: 'from-blue-400/20 to-indigo-400/20',
+    title: 'Parte del equipo de desarrollo del proyecto'
+  },
+  { 
+    type: 'image', 
+    src: '/uploads/trueta/img3.png',
+    gradient: 'from-cyan-400/20 to-blue-400/20',
+    title: 'Interfaz de la sección de cirugías de la aplicación'
+  },
+];
+
+// Galería de imágenes para el proyecto ObservaAI
+const observaAIGalleryImages: Array<{
+  type?: string;
+  src: string;
+  gradient?: string;
+  title: string;
+}> = [];
+
+const savedTimeFormatted = computed(() => {
+  const totalSeconds = savedSeconds.value;
+  const days = Math.floor(totalSeconds / (24 * 60 * 60));
+  const hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
+  const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+  const seconds = (totalSeconds % 60).toFixed(1); // Mostrar con 1 decimal
+  
+  return {
+    days,
+    hours,
+    minutes,
+    seconds
+  };
+});
+
+// Intervalo para actualizar el tiempo ahorrado
+let savedTimeInterval: number | null = null;
+let aiAnalysisInterval: number | null = null;
+
+// Función para calcular el tiempo ahorrado desde el 1 de junio de 2024
+const calculateSavedTime = () => {
+  const startDate = new Date("2024-07-24T00:00:00");
+  const now = new Date();
+  const elapsedMilliseconds = now.getTime() - startDate.getTime();
+  const elapsedSeconds = elapsedMilliseconds / 1000;
+  
+  // Cada segundo real se ahorran 0.1925 segundos
+  savedSeconds.value = elapsedSeconds * 0.1925;
+  
+  // Cálculo de operaciones realizadas (15.000 operaciones por año)
+  // 15000 ops ÷ 365 días ÷ 24 horas ÷ 60 minutos ÷ 60 segundos = 0.000475687 ops/segundo
+  const operacionesPorSegundo = 15000 / (365 * 24 * 60 * 60);
+  operacionesRealizadas.value = elapsedSeconds * operacionesPorSegundo;
+};
+
+// Función para calcular el número de análisis de IA ejecutados
+const calculateAIAnalysis = () => {
+  const startDate = new Date("2025-04-05T00:00:00");
+  const now = new Date();
+  
+  // Verificar que la fecha de inicio sea en el futuro
+  if (now < startDate) {
+    observaAIAnalysisCount.value = 0;
+    return;
+  }
+  
+  const elapsedMilliseconds = now.getTime() - startDate.getTime();
+  const elapsedMinutes = elapsedMilliseconds / (1000 * 60);
+  
+  // 0.3 análisis por minuto
+  observaAIAnalysisCount.value = Math.floor(elapsedMinutes * 0.3);
+};
+
+// Control para mostrar/ocultar detalles del proyecto Trueta
+const showTruetaDetails = ref(false);
+
+// Variables para el modal de imágenes
+const showImageModal = ref(false);
+const selectedImageIndex = ref(0);
+
+// Función para abrir el modal con la imagen seleccionada
+const openImageModal = (index: number) => {
+  selectedImageIndex.value = index;
+  showImageModal.value = true;
+  
+  // Prevenir el scroll del body mientras el modal está abierto
+  document.body.style.overflow = 'hidden';
+  
+  // Aplicar la animación pulse al elemento que se ha clicado
+  // Necesitamos esperar un momento para asegurar que el DOM está actualizado
+  setTimeout(() => {
+    const clickedImage = document.querySelector(`.gallery-image-${index}`);
+    if (clickedImage) {
+      clickedImage.classList.add('pulse-on-click');
+      
+      // Eliminar la clase después de la animación para que se pueda reproducir de nuevo
+      setTimeout(() => {
+        clickedImage.classList.remove('pulse-on-click');
+      }, 300); // Duración de la animación
+    }
+  }, 0);
+};
+
+// Función para cerrar el modal
+const closeImageModal = () => {
+  showImageModal.value = false;
+  // Restaurar el scroll del body
+  document.body.style.overflow = '';
+};
+
+// Listeners para cerrar el modal con Escape
+onMounted(() => {
+  window.addEventListener('keydown', handleKeyDown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown);
+});
+
+const handleKeyDown = (e: KeyboardEvent) => {
+  if (e.key === 'Escape' && showImageModal.value) {
+    closeImageModal();
+  }
+};
+
+// Preparar opciones de idioma para el dropdown
+const languageOptions = computed(() => {
+  return availableLocales.map((lang) => ({
+    value: lang,
+    label: t(`language.${lang}`),
+  }));
+});
+
+// Función para cambiar el idioma
+const changeLanguage = (lang: string) => {
+  locale.value = lang;
+  localStorage.setItem("language", lang);
+};
+
+// Watch para reiniciar la terminal cuando cambia el idioma
+watch(locale, () => {
+  // Detener la animación actual si existe
+  if (typingTimeout) {
+    clearTimeout(typingTimeout);
+    typingTimeout = null;
+  }
+
+  // Reiniciar la terminal
+  terminalLines.value = [];
+  commandIndex.value = 0;
+  charIndex.value = 0;
+  isJsonSection.value = false;
+  userScrolled.value = false;
+  isAtBottom.value = true;
+
+  // Iniciar la animación de nuevo
+  startTerminalAnimation();
+});
+
+// Dark mode toggle implementation
+const isDarkMode = ref(true);
+
+// Estado para controlar la apariencia del header al hacer scroll
+const isScrolled = ref(false);
+
+// Función para detectar el scroll y actualizar el estado
+const handleScroll = () => {
+  isScrolled.value = window.scrollY > 20;
+};
+
+// Check localStorage and system preference on mount
+onMounted(() => {
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "dark") {
+    isDarkMode.value = true;
+  } else if (savedTheme === "light") {
+    isDarkMode.value = false;
+  } else {
+    // Si no hay preferencia guardada, usar modo oscuro por defecto
+    isDarkMode.value = true;
+  }
+  updateTheme();
+
+  // Añadir event listener para el movimiento del mouse en toda la ventana
+  window.addEventListener("mousemove", handleGlobalMouseMove);
+
+  // Añadir event listener para el scroll
+  window.addEventListener("scroll", handleScroll);
+
+  // Iniciar animación de escritura para la terminal
+  startTerminalAnimation();
+
+  // Iniciar las partículas
+  initParticles();
+
+  // Añadir event listener para el scroll en la terminal
+  if (terminalRef.value) {
+    terminalRef.value.addEventListener("scroll", handleTerminalScroll);
+  }
+
+  // Iniciar el contador de tiempo ahorrado
+  calculateSavedTime();
+  savedTimeInterval = setInterval(() => {
+    calculateSavedTime();
+  }, 100);
+  
+  // Iniciar el contador de análisis de IA
+  calculateAIAnalysis();
+  aiAnalysisInterval = setInterval(() => {
+    calculateAIAnalysis();
+  }, 1000);
+
+  // Limpieza
+  return () => {
+    window.removeEventListener("mousemove", handleGlobalMouseMove);
+    window.removeEventListener("scroll", handleScroll);
+    if (particleInterval) clearInterval(particleInterval);
+    if (terminalRef.value) {
+      terminalRef.value.removeEventListener("scroll", handleTerminalScroll);
+    }
+    if (savedTimeInterval) {
+      clearInterval(savedTimeInterval);
+    }
+    if (aiAnalysisInterval) {
+      clearInterval(aiAnalysisInterval);
+    }
+  };
+});
+
+// Update theme when isDarkMode changes
+watch(isDarkMode, () => {
+  updateTheme();
+  localStorage.setItem("theme", isDarkMode.value ? "dark" : "light");
+});
+
+// Apply theme to document
+const updateTheme = () => {
+  if (isDarkMode.value) {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
+};
+
+// Toggle dark mode
+const toggleDarkMode = () => {
+  isDarkMode.value = !isDarkMode.value;
+};
+
+// Variables para el efecto 3D
+const tiltX = ref(0);
+const tiltY = ref(0);
+const imageContainerRef = ref<HTMLElement | null>(null);
+
+// Función para manejar el movimiento del mouse en cualquier parte de la pantalla
+const handleGlobalMouseMove = (event: MouseEvent) => {
+  if (!imageContainerRef.value) return;
+
+  // Obtener tamaño de la ventana
+  const windowWidth = window.innerWidth;
+  const windowHeight = window.innerHeight;
+
+  // Calcular la posición relativa del mouse en la ventana (0-1)
+  const x = event.clientX / windowWidth;
+  const y = event.clientY / windowHeight;
+
+  // Convertir a un rango de -10 a 10 grados para el efecto tilt
+  tiltX.value = (y * 2 - 1) * -8;
+  tiltY.value = (x * 2 - 1) * 8;
+};
+
+// Variables para la terminal interactiva
+const terminalText = ref("");
+const terminalLines = ref<string[]>([]);
+const terminalCursor = ref(true);
+const typingSpeed = 50; // ms por caracter
+let typingTimeout: number | null = null;
+const terminalRef = ref<HTMLElement | null>(null);
+const userScrolled = ref(false);
+const isAtBottom = ref(true);
+
+// Función para comprobar si el scroll está en la parte inferior
+const checkIfAtBottom = () => {
+  if (!terminalRef.value) return true;
+
+  const { scrollTop, scrollHeight, clientHeight } = terminalRef.value;
+  // Consideramos que está en el fondo si está a menos de 30px del final
+  const atBottom = Math.abs(scrollHeight - scrollTop - clientHeight) < 30;
+  isAtBottom.value = atBottom;
+  return atBottom;
+};
+
+// Función para mantener el scroll de la terminal siempre abajo
+const scrollTerminalToBottom = () => {
+  if (!terminalRef.value) return;
+
+  // Solo hacemos scroll automático si el usuario está mirando el fondo
+  // o no ha interactuado aún con el scroll manual
+  if (isAtBottom.value || !userScrolled.value) {
+    setTimeout(() => {
+      if (terminalRef.value) {
+        // Usamos behavior:'auto' para escritura normal para que no sea distractivo
+        // Solo usamos 'smooth' cuando el usuario ha hecho scroll manual y luego vuelve al fondo
+        const scrollBehavior = userScrolled.value ? "smooth" : "auto";
+        terminalRef.value.scrollTo({
+          top: terminalRef.value.scrollHeight,
+          behavior: scrollBehavior,
+        });
+      }
+    }, 10);
+  }
+};
+
+// Event listener para el scroll manual del usuario
+const handleTerminalScroll = () => {
+  userScrolled.value = true;
+  checkIfAtBottom();
+};
+
+// Función para aplicar colores al JSON
+const formatJsonSyntax = (text: string): string => {
+  // Si la línea está vacía, la devolvemos tal cual
+  if (!text || text.trim() === "") return text;
+
+  try {
+    let coloredText = text;
+
+    // Colorizar las claves y valores JSON de manera más simple y robusta
+
+    // Verificar si la línea contiene una clave de JSON
+    if (text.includes('"') && text.includes(":")) {
+      // Es una línea con clave JSON
+      coloredText = text.replace(/"([^"]+)"/g, '<span class="text-blue-400">"$1"</span>');
+    }
+    // Si es valor de array (indentado y con comillas)
+    else if (text.trim().startsWith('"') && (text.includes(",") || text.includes('"'))) {
+      coloredText = text.replace(
+        /"([^"]+)"/g,
+        '<span class="text-emerald-400">"$1"</span>'
+      );
+    }
+
+    // Colorizar llaves, corchetes, etc.
+    coloredText = coloredText.replace(
+      /([{}\[\],])/g,
+      '<span class="text-gray-400">$1</span>'
+    );
+
+    return coloredText;
+  } catch (e) {
+    // Si hay algún error, devolvemos el texto original
+    return text;
+  }
+};
+
+// Comando que se escribirá automáticamente
+const commands = computed(() => [
+  "user@joan:~$ whoami",
+  t("terminal.response1"),
+  "user@joan:~$ cat skills.json",
+  // El JSON se separa en líneas individuales para simular mejor el comportamiento de una terminal real
+  "{",
+  '  "frontend": [',
+  `    "Vue.js",`,
+  `    "React",`,
+  `    "Lit Element",`,
+  `    "Astro",`,
+  `    "Angular",`,
+  `    "TypeScript",`,
+  `    "Tailwind CSS"`,
+  "  ],",
+  '  "backend": [',
+  `    "Laravel",`,
+  `    "Node.js",`,
+  `    "Express",`,
+  `    "PHP",`,
+  `    "Java",`,
+  `    "C/C++"`,
+  "  ],",
+  '  "databases": [',
+  `    "MySQL",`,
+  `    "MariaDB",`,
+  `    "SQLite"`,
+  "  ],",
+  '  "devops": [',
+  `    "Docker",`,
+  `    "Git",`,
+  `    "CI/CD",`,
+  `    "Linux",`,
+  `    "GitHub Actions"`,
+  "  ],",
+  `  "description": "${t("terminal.skills.description")}"`,
+  "}",
+  "user@joan:~$ ./experience.sh",
+  t("terminal.experience1"),
+  t("terminal.experience2"),
+  t("terminal.experience3"),
+  "user@joan:~$ echo $PASSION",
+  t("terminal.passion"),
+]);
+
+const commandIndex = ref(0);
+const charIndex = ref(0);
+const isJsonSection = ref(false);
+
+// Función para animar la escritura en la terminal
+const startTerminalAnimation = () => {
+  const typeNextChar = () => {
+    if (commandIndex.value >= commands.value.length) {
+      // Reiniciar la animación cuando se completa
+      setTimeout(() => {
+        terminalLines.value = [];
+        commandIndex.value = 0;
+        charIndex.value = 0;
+        isJsonSection.value = false;
+        userScrolled.value = false; // Reiniciar el estado de scroll manual
+        isAtBottom.value = true; // Asumimos que al reiniciar está en el fondo
+        startTerminalAnimation();
+      }, 5000);
+      return;
+    }
+
+    const currentCommand = commands.value[commandIndex.value];
+
+    // Detectar si estamos en la sección del JSON
+    if (currentCommand === "{") {
+      isJsonSection.value = true;
+    } else if (currentCommand === "user@joan:~$ experience-sh") {
+      // Usar el comando hardcodeado directamente
+      isJsonSection.value = false;
+    }
+
+    if (charIndex.value === 0) {
+      terminalLines.value.push("");
+      scrollTerminalToBottom(); // Scroll al agregar una nueva línea
+    }
+
+    if (charIndex.value < currentCommand.length) {
+      const lastIndex = terminalLines.value.length - 1;
+      terminalLines.value[lastIndex] = currentCommand.substring(0, charIndex.value + 1);
+
+      // Solo hacemos scroll automático cada 10 caracteres para no interrumpir demasiado al usuario
+      if (charIndex.value % 10 === 0) {
+        scrollTerminalToBottom();
+      }
+
+      charIndex.value++;
+
+      // Si estamos en el JSON, vamos más rápido
+      const currentSpeed = isJsonSection.value ? typingSpeed / 2 : typingSpeed;
+      typingTimeout = setTimeout(typeNextChar, currentSpeed);
+    } else {
+      // Cuando el comando está completo
+      charIndex.value = 0;
+      commandIndex.value++;
+
+      // Scroll automático al completar un comando
+      scrollTerminalToBottom();
+
+      // Pausa entre comandos - más corta para las líneas del JSON
+      const delayTime = isJsonSection.value
+        ? 100
+        : commandIndex.value % 2 === 0
+        ? 500
+        : 1000;
+      typingTimeout = setTimeout(typeNextChar, delayTime);
+    }
+  };
+
+  typeNextChar();
+};
+
+// Efecto intermitente del cursor - solo para compatibilidad
+// La animación real ahora está manejada por CSS
+setInterval(() => {
+  terminalCursor.value = !terminalCursor.value;
+}, 500);
+
+// Variables para las partículas flotantes
+const particles = ref<
+  {
+    x: number;
+    y: number;
+    size: number;
+    speedX: number;
+    speedY: number;
+    opacity: number;
+    color: string;
+  }[]
+>([]);
+let particleInterval: number | null = null;
+
+// Inicializar partículas
+const initParticles = () => {
+  // Crear partículas iniciales
+  for (let i = 0; i < 30; i++) {
+    particles.value.push({
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: Math.random() * 5 + 1,
+      speedX: (Math.random() - 0.5) * 0.5,
+      speedY: (Math.random() - 0.5) * 0.5,
+      opacity: Math.random() * 0.7 + 0.3,
+      color: getRandomColor(),
+    });
+  }
+
+  // Animar partículas
+  particleInterval = setInterval(() => {
+    particles.value = particles.value.map((p) => {
+      p.x += p.speedX;
+      p.y += p.speedY;
+
+      // Hacer que reboten en los bordes
+      if (p.x < 0 || p.x > 100) p.speedX *= -1;
+      if (p.y < 0 || p.y > 100) p.speedY *= -1;
+
+      return p;
+    });
+  }, 50);
+};
+
+// Función para generar colores aleatorios para partículas
+const getRandomColor = () => {
+  const colors = [
+    "#3B82F6", // blue-500
+    "#6366F1", // indigo-500
+    "#8B5CF6", // violet-500
+    "#EC4899", // pink-500
+    "#10B981", // emerald-500
+  ];
+  return colors[Math.floor(Math.random() * colors.length)];
+};
+
+// Función para forzar el scroll al fondo
+const scrollToBottom = () => {
+  if (terminalRef.value) {
+    terminalRef.value.scrollTo({
+      top: terminalRef.value.scrollHeight,
+      behavior: "smooth",
+    });
+    // Después de hacer scroll manual al fondo, reactivamos el scroll automático
+    isAtBottom.value = true;
+  }
+};
+</script>
+
+<style>
+/* Scroll suave para toda la página */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Offset para compensar la altura del header al hacer scroll */
+#featured-projects {
+  scroll-margin-top: 40px;
+}
+
+/* Estos son patrones de cuadrícula que requieren CSS personalizado */
+.bg-grid-pattern {
+  background-image: linear-gradient(
+      to right,
+      rgba(59, 130, 246, 0.3) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(59, 130, 246, 0.3) 1px, transparent 1px),
+    linear-gradient(to right, rgba(59, 130, 246, 0.4) 2px, transparent 2px),
+    linear-gradient(to bottom, rgba(59, 130, 246, 0.4) 2px, transparent 2px);
+  background-size: 30px 30px, 30px 30px, 150px 150px, 150px 150px;
+  background-position: center center;
+}
+
+.dark .bg-grid-pattern {
+  background-image: linear-gradient(
+      to right,
+      rgba(96, 165, 250, 0.25) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(96, 165, 250, 0.25) 1px, transparent 1px),
+    linear-gradient(to right, rgba(96, 165, 250, 0.35) 2px, transparent 2px),
+    linear-gradient(to bottom, rgba(96, 165, 250, 0.35) 2px, transparent 2px);
+  background-size: 30px 30px, 30px 30px, 150px 150px, 150px 150px;
+}
+
+/* Animaciones para los círculos gradientes */
+@keyframes blob {
+  0% {
+    transform: scale(1) translate(0px, 0px) rotate(0deg);
+    border-radius: 60% 40% 70% 30%;
+  }
+  25% {
+    transform: scale(1.05) translate(15px, -25px) rotate(2deg);
+    border-radius: 70% 30% 50% 50%;
+  }
+  50% {
+    transform: scale(1.1) translate(20px, 10px) rotate(5deg);
+    border-radius: 30% 70% 40% 60%;
+  }
+  75% {
+    transform: scale(0.95) translate(-15px, 20px) rotate(2deg);
+    border-radius: 50% 50% 30% 70%;
+  }
+  100% {
+    transform: scale(1) translate(0px, 0px) rotate(0deg);
+    border-radius: 60% 40% 70% 30%;
+  }
+}
+
+.animate-blob {
+  animation: blob 30s ease-in-out infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+.animation-delay-6000 {
+  animation-delay: 6s;
+}
+
+.animation-delay-3000 {
+  animation-delay: 3s;
+}
+
+.animation-delay-5000 {
+  animation-delay: 5s;
+}
+
+/* Efecto 3D - no tiene equivalente en Tailwind */
+.image-container {
+  perspective: 1500px;
+}
+
+.grid-bg-container {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.image-wrapper {
+  transform-style: preserve-3d;
+}
+
+/* Animaciones y keyframes */
+@keyframes blinkCursor {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes skillAnimation {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes blinkDot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* Animación de despliegue para el contenido expandible */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slideDown {
+  animation: slideDown 0.5s ease-out forwards;
+}
+
+/* Aplicación de animaciones */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.skill-bar-fill {
+  animation: skillAnimation 1.5s ease-out forwards;
+}
+
+.floating {
+  animation: float 6s ease-in-out infinite;
+}
+
+.rotating {
+  animation: rotate 20s linear infinite;
+}
+
+/* Terminal cursor */
+.terminal-cursor {
+  animation: blinkCursor 1s step-end infinite;
+}
+
+/* Hexágono - forma compleja que requiere CSS puro */
+/* Eliminando la parte del CSS del hexágono */
+
+/* Estilos para el indicador de puntos parpadeantes */
+.blinking-dot {
+  animation: blinkDot 1s infinite;
+}
+
+/* Altura fija para terminal */
+.h-terminal {
+  height: 550px;
+}
+
+/* Altura fija para contenedores principales */
+.h-content-box {
+  height: 550px;
+  overflow-y: auto;
+}
+
+/* Estilos personalizados para la scrollbar de la terminal */
+.terminal-scrollbar {
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 100, 100, 0.6) rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para Chrome, Edge y Safari */
+.terminal-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.terminal-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.terminal-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(120, 120, 120, 0.6);
+  border-radius: 3px;
+  transition: background 0.3s ease;
+}
+
+.terminal-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(140, 140, 140, 0.7);
+}
+
+/* Para darle un efecto al scroll cuando se usa */
+.terminal-scrollbar::-webkit-scrollbar-thumb:active {
+  background: rgba(160, 160, 160, 0.8);
+  box-shadow: 0 0 6px rgba(180, 180, 180, 0.4);
+}
+
+/* Transiciones para el modal de imágenes */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s, transform 0.4s;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+/* Animación para el clic en las imágenes */
+@keyframes pulseClick {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.pulse-on-click {
+  animation: pulseClick 0.3s ease-out;
+}
+
+/* Efecto de brillo al pasar por encima de las imágenes del modal */
+.hover-glow:hover {
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.15);
+}
+
+/* Animación para cambio de pestañas */
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+</style>
+
+<template>
+  <Head>
+    <title>{{ pageTitle }}</title>
+    <meta name="description" :content="pageDescription" head-key="description" />
+    <meta name="keywords" :content="pageKeywords" head-key="keywords" />
+    <meta property="og:title" :content="pageTitle" head-key="og:title" />
+    <meta property="og:description" :content="pageDescription" head-key="og:description" />
+    <meta property="og:url" content="https://joanpaneque.dev" head-key="og:url" />
+    <meta property="og:image" content="https://joanpaneque.dev/img/og-image.jpg" head-key="og:image" />
+    <meta name="twitter:title" :content="pageTitle" head-key="twitter:title" />
+    <meta name="twitter:description" :content="pageDescription" head-key="twitter:description" />
+    <meta name="twitter:image" content="https://joanpaneque.dev/img/og-image.jpg" head-key="twitter:image" />
+    <link rel="canonical" href="https://joanpaneque.dev" head-key="canonical" />
+  </Head>
+
+  <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300 relative overflow-hidden">
+    <!-- Rest of the template code -->
+    <footer>
+      <!-- Footer content -->
+    </footer>
+  </div>
+</template>

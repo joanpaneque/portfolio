@@ -1,2 +1,5 @@
 User-agent: *
 Disallow:
+
+# Sitemap
+Sitemap: https://joanpaneque.dev/sitemap.xml

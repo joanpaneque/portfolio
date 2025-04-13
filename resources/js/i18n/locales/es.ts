@@ -5,6 +5,13 @@ export default {
     specialization: "especializado en Laravel + Vue.",
     description: "Enfocado en crear proyectos que tienen un gran impacto en la sociedad con tecnologías modernas y código limpio. Construyo aplicaciones web robustas, escalables y de alta calidad."
   },
+  app: {
+    name: "Joan Paneque"
+  },
+  meta: {
+    description: "Portfolio de Joan Paneque - Ingeniero de Software especializado en desarrollo web con Laravel y Vue.js. Creador de aplicaciones web robustas e innovadoras con impacto real.",
+    keywords: "joan paneque, desarrollador web, programador, ingeniero de software, portfolio, laravel, vue, javascript, php, desarrollo web, fullstack, aplicaciones web"
+  },
   cta: {
     viewProjects: "Ver Proyectos",
     readMore: "Leer Más",
