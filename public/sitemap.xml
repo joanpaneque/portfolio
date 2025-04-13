@@ -4,7 +4,7 @@
     <!-- Página raíz (redirección a idioma) -->
     <url>
         <loc>https://joanpaneque.dev/</loc>
-        <lastmod>2023-08-01</lastmod>
+        <lastmod>2025-04-13</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
         <xhtml:link rel="alternate" hreflang="es" href="https://joanpaneque.dev/es"/>
@@ -18,7 +18,7 @@
     <!-- Versión en español -->
     <url>
         <loc>https://joanpaneque.dev/es</loc>
-        <lastmod>2023-08-01</lastmod>
+        <lastmod>2025-04-13</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
         <xhtml:link rel="alternate" hreflang="es" href="https://joanpaneque.dev/es"/>
@@ -32,7 +32,7 @@
     <!-- Versión en inglés -->
     <url>
         <loc>https://joanpaneque.dev/en</loc>
-        <lastmod>2023-08-01</lastmod>
+        <lastmod>2025-04-13</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
         <xhtml:link rel="alternate" hreflang="es" href="https://joanpaneque.dev/es"/>
@@ -46,7 +46,7 @@
     <!-- Versión en francés -->
     <url>
         <loc>https://joanpaneque.dev/fr</loc>
-        <lastmod>2023-08-01</lastmod>
+        <lastmod>2025-04-13</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
         <xhtml:link rel="alternate" hreflang="es" href="https://joanpaneque.dev/es"/>
@@ -60,7 +60,7 @@
     <!-- Versión en alemán -->
     <url>
         <loc>https://joanpaneque.dev/de</loc>
-        <lastmod>2023-08-01</lastmod>
+        <lastmod>2025-04-13</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
         <xhtml:link rel="alternate" hreflang="es" href="https://joanpaneque.dev/es"/>
@@ -74,7 +74,7 @@
     <!-- Versión en catalán -->
     <url>
         <loc>https://joanpaneque.dev/ca</loc>
-        <lastmod>2023-08-01</lastmod>
+        <lastmod>2025-04-13</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
         <xhtml:link rel="alternate" hreflang="es" href="https://joanpaneque.dev/es"/>

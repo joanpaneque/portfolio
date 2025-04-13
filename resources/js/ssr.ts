@@ -4,8 +4,12 @@ import { renderToString } from '@vue/server-renderer';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createSSRApp, DefineComponent, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+import i18n from './i18n';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+
+// Definir los idiomas soportados
+type SupportedLocale = 'es' | 'ca' | 'en' | 'fr' | 'de';
 
 createServer((page) =>
     createInertiaApp({
@@ -18,12 +22,19 @@ createServer((page) =>
                 import.meta.glob<DefineComponent>('./Pages/**/*.vue'),
             ),
         setup({ App, props, plugin }) {
+            // Configuramos el idioma según lo recibido del servidor
+            const locale = page.props.locale as string;
+            if (locale && ['es', 'ca', 'en', 'fr', 'de'].includes(locale)) {
+                i18n.global.locale.value = locale as SupportedLocale;
+            }
+
             return createSSRApp({ render: () => h(App, props) })
                 .use(plugin)
                 .use(ZiggyVue, {
                     ...page.props.ziggy,
                     location: new URL(page.props.ziggy.location),
-                });
+                })
+                .use(i18n);
         },
     }),
 );
