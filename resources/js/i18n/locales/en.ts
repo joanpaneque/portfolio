@@ -5,6 +5,39 @@ export default {
     specialization: "specialized in Laravel + Vue.",
     description: "Focused on creating projects with high social impact using modern technologies and clean code. I build robust, scalable, and high-quality web applications."
   },
+  // Calendar translations
+  calendar: {
+    weekdays: {
+      monday: "Monday",
+      tuesday: "Tuesday",
+      wednesday: "Wednesday",
+      thursday: "Thursday",
+      friday: "Friday",
+      saturday: "Saturday",
+      sunday: "Sunday",
+      monday_short: "Mo",
+      tuesday_short: "Tu",
+      wednesday_short: "We",
+      thursday_short: "Th",
+      friday_short: "Fr",
+      saturday_short: "Sa",
+      sunday_short: "Su"
+    },
+    months: {
+      january: "January",
+      february: "February",
+      march: "March",
+      april: "April",
+      may: "May",
+      june: "June",
+      july: "July",
+      august: "August",
+      september: "September",
+      october: "October",
+      november: "November",
+      december: "December"
+    }
+  },
   cta: {
     viewProjects: "View Projects",
     readMore: "Read More",
@@ -54,12 +87,30 @@ export default {
     weatherDescription: "Customized predictions about specific weather phenomena in concrete locations."
   },
   services: {
-    webDev: "Web Development",
-    webDevDescription: "Creation of modern, responsive and scalable web applications with Laravel, Vue.js and other cutting-edge technologies.",
-    uiUxDesign: "UI/UX Design",
-    uiUxDescription: "Design of user-centered, intuitive and visually appealing interfaces that enhance the user experience.",
-    apiIntegrations: "API Integrations",
-    apiDescription: "Development and integration of robust APIs to connect applications and services for efficient data flow."
+    webDev: "Professional Web Development",
+    webDevDescription: "I transform your ideas into high-quality, attractive web applications optimized for results. Specialized in custom solutions with Laravel, Vue.js, and the latest technologies that will make your business stand out in the digital market.",
+    uiUxDesign: "Strategic UI/UX Design",
+    uiUxDescription: "I create impactful interfaces and memorable user experiences that improve interaction, increase conversions, and build customer loyalty. Strategic design focused on your business goals.",
+    apiIntegrations: "API Integrations & Technical Solutions",
+    apiDescription: "I develop robust solutions and integrations that connect systems, automate processes, and optimize your business operations. Scalable and maintainable architectures for your business growth.",
+    consultingTitle: "Technology Consulting",
+    consultingDescription: "Strategic advice for your business digital transformation, process optimization, and selection of appropriate technologies for your specific objectives.",
+    webDevelopment: {
+      title: "Professional Web Development",
+      description: "I transform your ideas into high-quality, attractive web applications optimized for results. Custom services with cutting-edge technologies to grow your digital business.",
+      tags: ["Laravel", "Vue.js", "React"]
+    },
+    uiDesign: {
+      title: "Strategic UI/UX Design",
+      description: "Impactful interfaces and memorable user experiences that increase conversions and build customer loyalty. Results-oriented design for your digital business.",
+      tags: ["Figma", "Wireframing", "Prototyping"]
+    },
+    aiSolutions: {
+      title: "Advanced Solutions",
+      description: "Integration of advanced technologies and AI to automate processes, enhance user experience, and optimize the operational efficiency of your business.",
+      tags: ["API Integrations", "Automation", "Data Analysis"]
+    },
+    freelanceMessage: "I offer customized freelance services for startups, companies, and entrepreneurs seeking quality digital solutions. My approach combines technical excellence with a strategic vision to develop digital products that make a real impact on your business and users. Each project receives dedicated attention to deliver exceptional results that exceed expectations."
   },
   footer: {
     rights: "All rights reserved."
@@ -141,6 +192,21 @@ export default {
     hideDetails: "Hide details",
     awardsWon: "Awards won"
   },
+  contact: {
+    title: "Book a Free Consultation",
+    subtitle: "Schedule a no-obligation meeting to discuss your project",
+    description: "Select a date and time that works for you so we can talk about your needs and how I can help you.",
+    selectDate: "Select a date",
+    selectTime: "Select a time",
+    noTimesAvailable: "No times available for this date",
+    yourDetails: "Your details",
+    name: "Full name",
+    email: "Email address",
+    projectDetails: "Project details (optional)",
+    submitButton: "Confirm meeting",
+    successMessage: "Meeting successfully scheduled! You'll receive a confirmation email.",
+    errorMessage: "An error has occurred. Please try again."
+  },
   // SEO metadata section
   app: {
     name: "Joan Paneque"
@@ -148,5 +214,39 @@ export default {
   meta: {
     description: "Joan Paneque's Portfolio - Software Engineer specialized in web development with Laravel and Vue.js. Creator of robust and innovative web applications with real impact.",
     keywords: "joan paneque, web developer, programmer, software engineer, portfolio, laravel, vue, javascript, php, web development, fullstack, web applications"
+  },
+  // Timezone translations
+  timezones: {
+    label: "Select your timezone:",
+    detecting: "Automatically detecting your timezone...",
+    info: "Times will be shown according to your selected timezone.",
+    manualSelection: "Select your timezone manually if it's not correct!",
+    "Etc/GMT+12": "UTC−12:00 Baker Island, Howland Island (USA)",
+    "Etc/GMT+11": "UTC−11:00 American Samoa",
+    "Etc/GMT+10": "UTC−10:00 Hawaii (USA)",
+    "Etc/GMT+9": "UTC−09:00 Alaska (USA)",
+    "Etc/GMT+8": "UTC−08:00 Los Angeles, Vancouver (Pacific Time)",
+    "Etc/GMT+7": "UTC−07:00 Denver, Phoenix (Mountain Time)",
+    "Etc/GMT+6": "UTC−06:00 Mexico City, Chicago (Central Time)",
+    "Etc/GMT+5": "UTC−05:00 New York, Lima, Bogotá (Eastern Time)",
+    "Etc/GMT+4": "UTC−04:00 Caracas, Puerto Rico (Atlantic Time)",
+    "Etc/GMT+3": "UTC−03:00 Buenos Aires, São Paulo",
+    "Etc/GMT+2": "UTC−02:00 South Georgia Islands",
+    "Etc/GMT+1": "UTC−01:00 Azores (Portugal)",
+    "Etc/GMT+0": "UTC±00:00 London, Lisbon, Accra",
+    "Etc/GMT-1": "UTC+01:00 Madrid, Paris, Berlin (Central European Time)",
+    "Etc/GMT-2": "UTC+02:00 Athens, Cairo, Johannesburg",
+    "Etc/GMT-3": "UTC+03:00 Moscow, Nairobi, Riyadh",
+    "Etc/GMT-4": "UTC+04:00 Dubai, Baku",
+    "Etc/GMT-5": "UTC+05:00 Islamabad, Tashkent",
+    "Etc/GMT-6": "UTC+06:00 Dhaka, Almaty",
+    "Etc/GMT-7": "UTC+07:00 Bangkok, Hanoi",
+    "Etc/GMT-8": "UTC+08:00 Beijing, Singapore, Perth",
+    "Etc/GMT-9": "UTC+09:00 Tokyo, Seoul",
+    "Etc/GMT-10": "UTC+10:00 Sydney, Port Moresby",
+    "Etc/GMT-11": "UTC+11:00 Solomon Islands, New Caledonia",
+    "Etc/GMT-12": "UTC+12:00 Auckland, Fiji",
+    "Etc/GMT-13": "UTC+13:00 Tonga, Phoenix Islands",
+    "Etc/GMT-14": "UTC+14:00 Line Islands (Kiribati)"
   }
 }; 

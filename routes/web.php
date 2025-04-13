@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\App;
 use Illuminate\Http\Request;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\TimezoneController;
 
 // Función para detectar el idioma preferido del navegador
 function detectPreferredLanguage(Request $request) {
@@ -75,3 +77,23 @@ Route::get('/ca', function () {
         'locale' => 'ca'
     ]);
 });
+
+// API para detectar zona horaria por IP
+Route::get('/api/timezone', [TimezoneController::class, 'detectTimezone'])->name('api.timezone');
+
+// Rutas de administración
+Route::get('/admin/login', [AdminController::class, 'showLogin'])->name('admin.login');
+Route::post('/admin/login', [AdminController::class, 'login']);
+Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
+
+// Rutas protegidas de administración
+Route::middleware(['admin.auth'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+    
+    // Rutas de gestión de disponibilidad
+    Route::get('/admin/availability', [\App\Http\Controllers\Admin\AvailabilityController::class, 'index'])->name('admin.availability');
+    Route::post('/admin/availability', [\App\Http\Controllers\Admin\AvailabilityController::class, 'update'])->name('admin.availability.update');
+});
+
+// Ruta API para obtener la disponibilidad (sin protección de admin)
+Route::get('/api/availability', [\App\Http\Controllers\Admin\AvailabilityController::class, 'getAvailability'])->name('api.availability');

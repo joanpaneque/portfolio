@@ -12,6 +12,38 @@ export default {
     description: "Portfolio de Joan Paneque - Ingeniero de Software especializado en desarrollo web con Laravel y Vue.js. Creador de aplicaciones web robustas e innovadoras con impacto real.",
     keywords: "joan paneque, desarrollador web, programador, ingeniero de software, portfolio, laravel, vue, javascript, php, desarrollo web, fullstack, aplicaciones web"
   },
+  calendar: {
+    weekdays: {
+      monday: "Lunes",
+      tuesday: "Martes",
+      wednesday: "Miércoles",
+      thursday: "Jueves",
+      friday: "Viernes",
+      saturday: "Sábado",
+      sunday: "Domingo",
+      monday_short: "Lu",
+      tuesday_short: "Ma",
+      wednesday_short: "Mi",
+      thursday_short: "Ju",
+      friday_short: "Vi",
+      saturday_short: "Sa",
+      sunday_short: "Do"
+    },
+    months: {
+      january: "Enero",
+      february: "Febrero",
+      march: "Marzo",
+      april: "Abril",
+      may: "Mayo",
+      june: "Junio",
+      july: "Julio",
+      august: "Agosto",
+      september: "Septiembre",
+      october: "Octubre",
+      november: "Noviembre",
+      december: "Diciembre"
+    }
+  },
   cta: {
     viewProjects: "Ver Proyectos",
     readMore: "Leer Más",
@@ -61,12 +93,30 @@ export default {
     weatherDescription: "Predicciones personalizadas sobre fenómenos meteorológicos específicos en ubicaciones concretas."
   },
   services: {
-    webDev: "Desarrollo Web",
-    webDevDescription: "Creación de aplicaciones web modernas, responsivas y escalables con Laravel, Vue.js y otras tecnologías de vanguardia.",
-    uiUxDesign: "Diseño UI/UX",
-    uiUxDescription: "Diseño de interfaces centradas en el usuario, intuitivas y visualmente atractivas que mejoran la experiencia del usuario.",
-    apiIntegrations: "Integraciones API",
-    apiDescription: "Desarrollo e integración de APIs robustas para conectar aplicaciones y servicios para un flujo de datos eficiente."
+    webDev: "Desarrollo Web Profesional",
+    webDevDescription: "Transformo tus ideas en aplicaciones web de alta calidad, atractivas y optimizadas para resultados. Especializado en soluciones personalizadas con Laravel, Vue.js y las últimas tecnologías que harán destacar tu negocio en el mercado digital.",
+    uiUxDesign: "Diseño UI/UX Estratégico",
+    uiUxDescription: "Creo interfaces impactantes y experiencias de usuario memorables que mejoran la interacción, aumentan las conversiones y fidelizan a tus clientes. Diseño estratégico enfocado en los objetivos de tu negocio.",
+    apiIntegrations: "Integraciones API & Soluciones Técnicas",
+    apiDescription: "Desarrollo soluciones e integraciones robustas que conectan sistemas, automatizan procesos y optimizan tu operación empresarial. Arquitecturas escalables y mantenibles para el crecimiento de tu negocio.",
+    consultingTitle: "Consultoría Tecnológica",
+    consultingDescription: "Asesoramiento estratégico para la transformación digital de tu negocio, optimización de procesos y selección de tecnologías adecuadas para tus objetivos específicos.",
+    webDevelopment: {
+      title: "Desarrollo Web Profesional",
+      description: "Transformo tus ideas en aplicaciones web de alta calidad, atractivas y optimizadas para resultados. Servicios personalizados con tecnologías de vanguardia para hacer crecer tu negocio digital.",
+      tags: ["Laravel", "Vue.js", "React"]
+    },
+    uiDesign: {
+      title: "Diseño UI/UX Estratégico",
+      description: "Interfaces impactantes y experiencias de usuario memorables que aumentan conversiones y fidelizan clientes. Diseño orientado a resultados para tu negocio digital.",
+      tags: ["Figma", "Wireframing", "Prototipos"]
+    },
+    aiSolutions: {
+      title: "Soluciones Avanzadas",
+      description: "Integración de tecnologías avanzadas e IA para automatizar procesos, mejorar la experiencia de usuario y optimizar la eficiencia operativa de tu negocio.",
+      tags: ["Integraciones API", "Automatización", "Análisis de datos"]
+    },
+    freelanceMessage: "Ofrezco servicios freelance personalizados para startups, empresas y emprendedores que buscan soluciones digitales de calidad. Mi enfoque combina excelencia técnica con una visión estratégica para desarrollar productos digitales que generen un impacto real en tu negocio y usuarios. Cada proyecto recibe atención dedicada para entregar resultados excepcionales que superen expectativas."
   },
   footer: {
     rights: "Todos los derechos reservados."
@@ -147,5 +197,53 @@ export default {
   project: {
     hideDetails: "Ocultar detalles",
     awardsWon: "Premios ganados"
+  },
+  contact: {
+    title: "Reserva una Consulta Gratuita",
+    subtitle: "Agenda una reunión sin compromiso para discutir tu proyecto",
+    description: "Selecciona una fecha y horario que te convenga para que podamos hablar sobre tus necesidades y cómo puedo ayudarte.",
+    selectDate: "Selecciona una fecha",
+    selectTime: "Selecciona un horario",
+    noTimesAvailable: "No hay horarios disponibles para esta fecha",
+    yourDetails: "Tus datos",
+    name: "Nombre completo",
+    email: "Correo electrónico",
+    projectDetails: "Detalles del proyecto (opcional)",
+    submitButton: "Confirmar reunión",
+    successMessage: "¡Reunión agendada con éxito! Recibirás un correo de confirmación.",
+    errorMessage: "Ha ocurrido un error. Por favor, intenta nuevamente."
+  },
+  timezones: {
+    label: "Selecciona tu zona horaria:",
+    detecting: "Detectando automáticamente tu zona horaria...",
+    info: "Las horas se mostrarán según tu zona horaria seleccionada.",
+    manualSelection: "¡Selecciona manualmente tu zona horaria si no es correcta!",
+    "Etc/GMT+12": "UTC−12:00 Baker Island, Howland Island (EE. UU.)",
+    "Etc/GMT+11": "UTC−11:00 Samoa Americana",
+    "Etc/GMT+10": "UTC−10:00 Hawái (EE. UU.)",
+    "Etc/GMT+9": "UTC−09:00 Alaska (EE. UU.)",
+    "Etc/GMT+8": "UTC−08:00 Los Ángeles, Vancouver (Hora del Pacífico)",
+    "Etc/GMT+7": "UTC−07:00 Denver, Phoenix (Hora de la Montaña)",
+    "Etc/GMT+6": "UTC−06:00 Ciudad de México, Chicago (Hora Central)",
+    "Etc/GMT+5": "UTC−05:00 Nueva York, Lima, Bogotá (Hora del Este)",
+    "Etc/GMT+4": "UTC−04:00 Caracas, Puerto Rico (Hora del Atlántico)",
+    "Etc/GMT+3": "UTC−03:00 Buenos Aires, São Paulo",
+    "Etc/GMT+2": "UTC−02:00 Islas Georgia del Sur",
+    "Etc/GMT+1": "UTC−01:00 Azores (Portugal)",
+    "Etc/GMT+0": "UTC±00:00 Londres, Lisboa, Accra",
+    "Etc/GMT-1": "UTC+01:00 Madrid, París, Berlín (Hora Central Europea)",
+    "Etc/GMT-2": "UTC+02:00 Atenas, El Cairo, Johannesburgo",
+    "Etc/GMT-3": "UTC+03:00 Moscú, Nairobi, Riad",
+    "Etc/GMT-4": "UTC+04:00 Dubái, Bakú",
+    "Etc/GMT-5": "UTC+05:00 Islamabad, Taskent",
+    "Etc/GMT-6": "UTC+06:00 Daca, Almatý",
+    "Etc/GMT-7": "UTC+07:00 Bangkok, Hanói",
+    "Etc/GMT-8": "UTC+08:00 Pekín, Singapur, Perth",
+    "Etc/GMT-9": "UTC+09:00 Tokio, Seúl",
+    "Etc/GMT-10": "UTC+10:00 Sídney, Port Moresby",
+    "Etc/GMT-11": "UTC+11:00 Islas Salomón, Nueva Caledonia",
+    "Etc/GMT-12": "UTC+12:00 Auckland, Fiyi",
+    "Etc/GMT-13": "UTC+13:00 Tonga, Islas Fénix",
+    "Etc/GMT-14": "UTC+14:00 Islas de la Línea (Kiribati)"
   }
 }; 

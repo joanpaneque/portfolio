@@ -5,6 +5,38 @@ export default {
     specialization: "spécialisé en Laravel + Vue.",
     description: "Concentré sur la création de projets à fort impact social avec des technologies modernes et un code propre. Je construis des applications web robustes, évolutives et de haute qualité."
   },
+  calendar: {
+    weekdays: {
+      monday: "Lundi",
+      tuesday: "Mardi",
+      wednesday: "Mercredi",
+      thursday: "Jeudi",
+      friday: "Vendredi",
+      saturday: "Samedi",
+      sunday: "Dimanche",
+      monday_short: "Lu",
+      tuesday_short: "Ma",
+      wednesday_short: "Me",
+      thursday_short: "Je",
+      friday_short: "Ve",
+      saturday_short: "Sa",
+      sunday_short: "Di"
+    },
+    months: {
+      january: "Janvier",
+      february: "Février",
+      march: "Mars",
+      april: "Avril",
+      may: "Mai",
+      june: "Juin",
+      july: "Juillet",
+      august: "Août",
+      september: "Septembre",
+      october: "Octobre",
+      november: "Novembre",
+      december: "Décembre"
+    }
+  },
   cta: {
     viewProjects: "Voir les Projets",
     readMore: "Lire Plus",
@@ -54,12 +86,30 @@ export default {
     weatherDescription: "Prédictions personnalisées sur des phénomènes météorologiques spécifiques à des emplacements concrets."
   },
   services: {
-    webDev: "Développement Web",
-    webDevDescription: "Création d'applications web modernes, réactives et évolutives avec Laravel, Vue.js et d'autres technologies de pointe.",
-    uiUxDesign: "Conception UI/UX",
-    uiUxDescription: "Conception d'interfaces centrées sur l'utilisateur, intuitives et visuellement attrayantes qui améliorent l'expérience utilisateur.",
-    apiIntegrations: "Intégrations API",
-    apiDescription: "Développement et intégration d'API robustes pour connecter des applications et des services pour un flux de données efficace."
+    webDev: "Développement Web Professionnel",
+    webDevDescription: "Je transforme vos idées en applications web de haute qualité, attrayantes et optimisées pour les résultats. Spécialisé dans les solutions personnalisées avec Laravel, Vue.js et les dernières technologies qui feront démarquer votre entreprise sur le marché numérique.",
+    uiUxDesign: "Conception UI/UX Stratégique",
+    uiUxDescription: "Je crée des interfaces impactantes et des expériences utilisateur mémorables qui améliorent l'interaction, augmentent les conversions et fidélisent vos clients. Conception stratégique axée sur les objectifs de votre entreprise.",
+    apiIntegrations: "Intégrations API & Solutions Techniques",
+    apiDescription: "Je développe des solutions et intégrations robustes qui connectent les systèmes, automatisent les processus et optimisent votre exploitation commerciale. Architectures évolutives et maintenables pour la croissance de votre entreprise.",
+    consultingTitle: "Conseil Technologique",
+    consultingDescription: "Conseils stratégiques pour la transformation numérique de votre entreprise, l'optimisation des processus et la sélection des technologies appropriées pour vos objectifs spécifiques.",
+    webDevelopment: {
+      title: "Développement Web Professionnel",
+      description: "Je transforme vos idées en applications web de haute qualité, attrayantes et optimisées pour les résultats. Services personnalisés avec des technologies de pointe pour développer votre entreprise numérique.",
+      tags: ["Laravel", "Vue.js", "React"]
+    },
+    uiDesign: {
+      title: "Conception UI/UX Stratégique",
+      description: "Interfaces impactantes et expériences utilisateur mémorables qui augmentent les conversions et fidélisent les clients. Conception orientée résultats pour votre entreprise numérique.",
+      tags: ["Figma", "Wireframing", "Prototypage"]
+    },
+    aiSolutions: {
+      title: "Solutions Avancées",
+      description: "Intégration de technologies avancées et d'IA pour automatiser les processus, améliorer l'expérience utilisateur et optimiser l'efficacité opérationnelle de votre entreprise.",
+      tags: ["Intégrations API", "Automatisation", "Analyse de données"]
+    },
+    freelanceMessage: "Je propose des services freelance personnalisés pour les startups, les entreprises et les entrepreneurs à la recherche de solutions numériques de qualité. Mon approche combine excellence technique et vision stratégique pour développer des produits numériques qui ont un impact réel sur votre entreprise et vos utilisateurs. Chaque projet reçoit une attention dédiée pour livrer des résultats exceptionnels qui dépassent les attentes."
   },
   footer: {
     rights: "Tous droits réservés."
@@ -141,11 +191,59 @@ export default {
     hideDetails: "Masquer les détails",
     awardsWon: "Prix remportés"
   },
+  contact: {
+    title: "Réservez une Consultation Gratuite",
+    subtitle: "Planifiez une réunion sans engagement pour discuter de votre projet",
+    description: "Sélectionnez une date et une heure qui vous conviennent afin que nous puissions discuter de vos besoins et de la façon dont je peux vous aider.",
+    selectDate: "Sélectionnez une date",
+    selectTime: "Sélectionnez une heure",
+    noTimesAvailable: "Aucun horaire disponible pour cette date",
+    yourDetails: "Vos coordonnées",
+    name: "Nom complet",
+    email: "Adresse e-mail",
+    projectDetails: "Détails du projet (facultatif)",
+    submitButton: "Confirmer la réunion",
+    successMessage: "Réunion planifiée avec succès ! Vous recevrez un e-mail de confirmation.",
+    errorMessage: "Une erreur s'est produite. Veuillez réessayer."
+  },
   app: {
     name: "Joan Paneque"
   },
   meta: {
     description: "Portfolio de Joan Paneque - Ingénieur Logiciel spécialisé dans le développement web avec Laravel et Vue.js. Créateur d'applications web robustes et innovantes à impact réel.",
     keywords: "joan paneque, développeur web, programmeur, ingénieur logiciel, portfolio, laravel, vue, javascript, php, développement web, fullstack, applications web"
+  },
+  timezones: {
+    label: "Sélectionnez votre fuseau horaire :",
+    detecting: "Détection automatique de votre fuseau horaire...",
+    info: "Les heures seront affichées selon votre fuseau horaire sélectionné.",
+    manualSelection: "Sélectionnez manuellement votre fuseau horaire s'il n'est pas correct !",
+    "Etc/GMT+12": "UTC−12:00 Île Baker, Île Howland (États-Unis)",
+    "Etc/GMT+11": "UTC−11:00 Samoa américaines",
+    "Etc/GMT+10": "UTC−10:00 Hawaï (États-Unis)",
+    "Etc/GMT+9": "UTC−09:00 Alaska (États-Unis)",
+    "Etc/GMT+8": "UTC−08:00 Los Angeles, Vancouver (Heure du Pacifique)",
+    "Etc/GMT+7": "UTC−07:00 Denver, Phoenix (Heure des Rocheuses)",
+    "Etc/GMT+6": "UTC−06:00 Mexico, Chicago (Heure centrale)",
+    "Etc/GMT+5": "UTC−05:00 New York, Lima, Bogotá (Heure de l'Est)",
+    "Etc/GMT+4": "UTC−04:00 Caracas, Porto Rico (Heure de l'Atlantique)",
+    "Etc/GMT+3": "UTC−03:00 Buenos Aires, São Paulo",
+    "Etc/GMT+2": "UTC−02:00 Îles Géorgie du Sud",
+    "Etc/GMT+1": "UTC−01:00 Açores (Portugal)",
+    "Etc/GMT+0": "UTC±00:00 Londres, Lisbonne, Accra",
+    "Etc/GMT-1": "UTC+01:00 Madrid, Paris, Berlin (Heure d'Europe centrale)",
+    "Etc/GMT-2": "UTC+02:00 Athènes, Le Caire, Johannesburg",
+    "Etc/GMT-3": "UTC+03:00 Moscou, Nairobi, Riyad",
+    "Etc/GMT-4": "UTC+04:00 Dubaï, Bakou",
+    "Etc/GMT-5": "UTC+05:00 Islamabad, Tachkent",
+    "Etc/GMT-6": "UTC+06:00 Dacca, Almaty",
+    "Etc/GMT-7": "UTC+07:00 Bangkok, Hanoï",
+    "Etc/GMT-8": "UTC+08:00 Pékin, Singapour, Perth",
+    "Etc/GMT-9": "UTC+09:00 Tokyo, Séoul",
+    "Etc/GMT-10": "UTC+10:00 Sydney, Port Moresby",
+    "Etc/GMT-11": "UTC+11:00 Îles Salomon, Nouvelle-Calédonie",
+    "Etc/GMT-12": "UTC+12:00 Auckland, Fidji",
+    "Etc/GMT-13": "UTC+13:00 Tonga, Îles Phoenix",
+    "Etc/GMT-14": "UTC+14:00 Îles de la Ligne (Kiribati)"
   }
 }; 
