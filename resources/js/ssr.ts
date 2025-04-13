@@ -9,7 +9,7 @@ import i18n from './i18n';
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 // Definir los idiomas soportados
-type SupportedLocale = 'es' | 'ca' | 'en' | 'fr' | 'de';
+type SupportedLocale = 'es' | 'ca' | 'en' | 'fr' | 'de' | 'it' | 'pt';
 
 createServer((page) =>
     createInertiaApp({
@@ -24,7 +24,7 @@ createServer((page) =>
         setup({ App, props, plugin }) {
             // Configuramos el idioma según lo recibido del servidor
             const locale = page.props.locale as string;
-            if (locale && ['es', 'ca', 'en', 'fr', 'de'].includes(locale)) {
+            if (locale && ['es', 'ca', 'en', 'fr', 'de', 'it', 'pt'].includes(locale)) {
                 i18n.global.locale.value = locale as SupportedLocale;
             }
 

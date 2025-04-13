@@ -37,7 +37,7 @@ const handlePopState = () => {
 
     if (pathSegments.length > 0) {
         const urlLang = pathSegments[0];
-        if (['es', 'en', 'fr', 'de', 'ca'].includes(urlLang)) {
+        if (['es', 'en', 'fr', 'de', 'ca', 'it', 'pt'].includes(urlLang)) {
             // Si la URL contiene un idioma válido, actualizarlo
             locale.value = urlLang;
             localStorage.setItem('language', urlLang);
@@ -46,7 +46,7 @@ const handlePopState = () => {
             const savedLang = localStorage.getItem('language');
             if (
                 savedLang &&
-                ['es', 'en', 'fr', 'de', 'ca'].includes(savedLang)
+                ['es', 'en', 'fr', 'de', 'ca', 'it', 'pt'].includes(savedLang)
             ) {
                 locale.value = savedLang;
             } else {

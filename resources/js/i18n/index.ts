@@ -4,13 +4,15 @@ import de from './locales/de';
 import en from './locales/en';
 import es from './locales/es';
 import fr from './locales/fr';
+import it from './locales/it';
+import pt from './locales/pt';
 
 // Verificar si estamos en un entorno de navegador
 const isBrowser = typeof window !== 'undefined';
 
 // Detectar el idioma preferido
 function detectPreferredLanguage() {
-    const supportedLocales = ['es', 'ca', 'en', 'fr', 'de'];
+    const supportedLocales = ['es', 'ca', 'en', 'fr', 'de', 'it', 'pt'];
 
     // Solo intentamos acceder a localStorage y navigator en el navegador
     if (isBrowser) {
@@ -45,5 +47,7 @@ export default createI18n({
         en,
         fr,
         de,
+        it,
+        pt,
     },
 });

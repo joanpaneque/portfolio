@@ -120,7 +120,9 @@ export default {
     ca: "Catalan",
     en: "English",
     fr: "French",
-    de: "German"
+    de: "German",
+    it: "Italian",
+    pt: "Portuguese"
   },
   terminal: {
     response1: "joan - Full Stack Developer",
