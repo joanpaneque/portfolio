@@ -44,6 +44,16 @@ class RedirectToLocale
         $segments = explode('/', $path);
         $firstSegment = $segments[0] ?? null;
 
+        // Si el primer segmento es 'undefined', redirigir a la misma ruta sin ese segmento
+        if ($firstSegment === 'undefined') {
+            // Eliminar 'undefined' del path
+            array_shift($segments);
+            $newPath = implode('/', $segments);
+
+            // Redirigir a la ruta con el locale adecuado
+            return redirect("/{$targetLocale}" . ($newPath ? "/{$newPath}" : ""));
+        }
+
         $firstSegmentInLocales = in_array($firstSegment, $locales);
         if (
             $firstSegmentInLocales ||

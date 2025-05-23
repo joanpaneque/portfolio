@@ -1,10 +1,10 @@
 <script setup>
-console.log($trans('hello')['world']);
+import { router } from '@inertiajs/vue3';
 </script>
 
 <template>
     <div>
         <h1>Portfolio</h1>
-        <p>{{ $trans('hello')['world'] }}</p>
+        <button @click="router.get(route('test'))">Test</button>
     </div>
 </template>

@@ -16,6 +16,10 @@ Route::group(['prefix' => '{locale}'], function () {
         return Inertia::render('Portfolio');
     })->name('portfolio.index');
 
+    Route::get('/test', function () {
+        return Inertia::render('Test');
+    })->name('test');
+
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->middleware(['auth', 'verified', IsAdmin::class])->name('dashboard');
