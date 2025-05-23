@@ -17,8 +17,6 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
 
-        $middleware->prepend(RedirectToLocale::class);
-
         $middleware->web(append: [
             HandleAppearance::class,
             HandleInertiaRequests::class,

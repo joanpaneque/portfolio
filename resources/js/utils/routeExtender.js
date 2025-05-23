@@ -16,7 +16,19 @@ export const RouteExtenderPlugin = {
         // Convertir arguments a un array para poder manipularlo más fácilmente
         const args = Array.from(arguments);
         const routeName = args[0];
-        const userLocale = "undefined";
+        // const userLocale = "ca";
+
+
+        const availableLocales = ['es', 'en', 'ca'];
+
+        // get the first segment of the path
+        const path = window.location.pathname;
+        const firstSegment = path.split('/')[1];
+        let userLocale = firstSegment;
+        if (!availableLocales.includes(userLocale)) {
+          userLocale = 'undefined';
+        }
+
 
         // Añadir o actualizar el parámetro locale
         if (args.length < 2 || !args[1]) {

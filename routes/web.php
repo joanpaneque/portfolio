@@ -4,14 +4,27 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 use App\Http\Middleware\Auth\IsAdmin;
-
+use App\Http\Middleware\RedirectToLocale;
 
 // Route::get('/', function () {
 //     return Inertia::render('Welcome');
 // })->name('index.portfolio');
 
+
+// outside test
+Route::get('/outside', function () {
+    return Inertia::render('Outside');
+})->name('outside');
+
+
+
+// redirect '/' to portfolio.index
+Route::get('/', function () {
+    return redirect()->route('portfolio.index', ['locale' => 'undefined']);
+});
+
 // lang prefix for all routes inside this block
-Route::group(['prefix' => '{locale}'], function () {
+Route::group(['prefix' => '{locale}', 'middleware' => RedirectToLocale::class], function () {
     Route::get('/', function () {
         return Inertia::render('Portfolio');
     })->name('portfolio.index');
@@ -24,6 +37,9 @@ Route::group(['prefix' => '{locale}'], function () {
         return Inertia::render('Dashboard');
     })->middleware(['auth', 'verified', IsAdmin::class])->name('dashboard');
 });
+
+
+
 
 
 
