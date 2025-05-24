@@ -12,7 +12,7 @@ window.addEventListener('scroll', () => {
 </script>
 
 <template>
-  <nav class="fixed w-full z-50 bg-[#002626] border-b border-dotted border-white/30">
+  <nav class="fixed w-full z-50 bg-[#002626] border-b border-dotted border-white/30 pt-[200px] mt-[-200px]">
     <div class="w-full h-[5px] bg-emerald-900">
       <div class="h-full bg-emerald-600" :style="{ width: `${scrollPosition}%` }"></div>
     </div>
