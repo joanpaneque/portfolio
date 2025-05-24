@@ -248,7 +248,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="mt-20 w-full flex flex-col items-center text-center pb-4 font-bold text-sm text-gray-200 px-8 md:px-16">
+    <div class="mt-20 w-full flex flex-col items-center text-center pb-4 font-bold text-sm text-gray-200 px-8 md:px-16 bg-white">
       <span>Tecnologías que domino (+50)</span>
 
       <div class="overflow-hidden w-full m-8">

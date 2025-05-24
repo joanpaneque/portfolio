@@ -20,8 +20,8 @@ window.addEventListener('scroll', () => {
       <div class="flex items-center justify-between h-20">
         <div class="flex items-center">
           <a class="text-2xl font-bold text-white flex items-center gap-2" href="#home">
-            <img alt="Logo" width="60" height="60" src="/images/logo.svg" />
-            Portfolio
+            <img alt="Logo" width="45" height="45" src="/images/logo.svg" />
+            <span class="ml-2">Portfolio</span>
           </a>
         </div>
         <div class="hidden md:flex items-center space-x-8">

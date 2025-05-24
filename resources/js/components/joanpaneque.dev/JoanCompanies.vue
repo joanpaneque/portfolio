@@ -42,10 +42,10 @@ const companies = ref([
 </script>
 
 <template>
-  <section id="companies" class="py-16 bg-white dark:bg-gray-800">
+  <section id="companies" class="py-16 bg-white">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
-        <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
           Empresas que han confiado en mi trabajo
         </h2>
       </div>

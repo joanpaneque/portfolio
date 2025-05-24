@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="Capa_1" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 728.95 672.68">
+<svg id="Capa_1" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 497.92 358.32">
   <defs>
     <style>
-      .cls-1, .cls-2 {
-        fill: #ffffff;
+      .cls-1 {
+        fill: #fff;
       }
 
       .cls-2 {
-        font-family: Bahnschrift, Bahnschrift;
-        font-size: 500px;
-        font-variation-settings: 'wght' 400, 'wdth' 100;
+        fill: #fff;
       }
     </style>
   </defs>
-  <text class="cls-2" transform="translate(78.82 347.39) rotate(35.65)"><tspan x="0" y="0">J</tspan></text>
-  <text class="cls-2" transform="translate(650.28 324.93) rotate(-144.43)"><tspan x="0" y="0">J</tspan></text>
-  <circle class="cls-1" cx="509.78" cy="347.39" r="33.62"/>
+  <path class="cls-1" d="M0,167.42h50.37c-3,23.03,13.45,42.93,32.3,53.82,31.17,18.01,58.92,5.71,79.66-20.29L306.76,0l40.02,29.05-145.12,202.62c-38.84,49.76-90.05,65.36-145.97,30C22.96,240.97-.49,207.42,0,167.42Z"/>
+  <path class="cls-1" d="M447.55,180.13c-2.45-24.19-30.61-47.46-53.62-50.97-25.22-3.85-44.56,10.52-59.3,29.19l-142.82,199.97-40.68-28.53c-.17-.7,3.22-5.12,3.89-6.1,46.17-66.83,95.37-131.66,141.92-198.24,41.78-52.9,96.79-63.95,152.94-23.48,28.67,20.66,47.88,52.39,48.02,88.48l-50.37.48c-.25-3.47.35-7.38,0-10.8Z"/>
+  <path class="cls-2" d="M383.65,151.25c27.38-2.34,45.78,27.64,31.47,51.16-13.41,22.04-46.18,21.2-58.32-1.56-11.4-21.38,2.83-47.54,26.85-49.6Z"/>
 </svg>
