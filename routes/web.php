@@ -5,7 +5,7 @@ use Inertia\Inertia;
 
 use App\Http\Middleware\Auth\IsAdmin;
 use App\Http\Middleware\RedirectToLocale;
-
+use App\Http\Controllers\PortfolioController;
 // Route::get('/', function () {
 //     return Inertia::render('Welcome');
 // })->name('index.portfolio');
@@ -25,9 +25,7 @@ Route::get('/', function () {
 
 // lang prefix for all routes inside this block
 Route::group(['prefix' => '{locale}', 'middleware' => RedirectToLocale::class], function () {
-    Route::get('/', function () {
-        return Inertia::render('Portfolio');
-    })->name('portfolio.index');
+    Route::get('/', [PortfolioController::class, 'index'])->name('portfolio.index');
 
     Route::get('/test', function () {
         return Inertia::render('Test');
@@ -37,8 +35,6 @@ Route::group(['prefix' => '{locale}', 'middleware' => RedirectToLocale::class], 
         return Inertia::render('Dashboard');
     })->middleware(['auth', 'verified', IsAdmin::class])->name('dashboard');
 });
-
-
 
 
 

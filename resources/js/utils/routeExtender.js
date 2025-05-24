@@ -41,18 +41,10 @@ export const RouteExtenderPlugin = {
           }
         }
 
-        // Mostrar información de depuración
-        console.log("[Route Debug]", {
-          name: routeName,
-          params: args[1],
-          userLocale: userLocale
-        });
-
         // Llamar a la función original con los argumentos modificados
         try {
           return originalRoute.apply(this, args);
         } catch (error) {
-          console.error('[RouteExtender] Error:', error);
           throw error;
         }
       };
@@ -61,8 +53,6 @@ export const RouteExtenderPlugin = {
       if (app.config && app.config.globalProperties) {
         app.config.globalProperties.route = window.route;
       }
-
-      console.log('[RouteExtender] Plugin instalado correctamente');
     }
   }
 };
