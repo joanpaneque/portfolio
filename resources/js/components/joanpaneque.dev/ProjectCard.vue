@@ -12,7 +12,7 @@
           :href="link" 
           target="_blank"
         >
-          Ver proyecto
+          {{ $trans("joan_projects.button_view_project") }}
         </a>
       </div>
     </div>

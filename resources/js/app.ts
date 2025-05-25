@@ -11,7 +11,7 @@ import { RouteExtenderPlugin } from './utils/routeExtender.js';
 // Declare window with $trans property
 declare global {
     interface Window {
-        $trans: (key: string) => any;
+        $trans: (key: string, params?: { [key: string]: any }) => any;
     }
 }
 
@@ -25,7 +25,7 @@ createInertiaApp({
 
         const translations = props.initialPage.props.trans as { [key: string]: any };
 
-        function trans(key: string): any {
+        function trans(key: string, params?: { [key: string]: any }): any {
             // split the key by . and try to get the value from the translations object
             const keys = key.split('.');
             let value: any = translations;
@@ -35,7 +35,20 @@ createInertiaApp({
                 }
                 value = value[k];
             }
-            return value !== null ? value : key;
+            
+            // If no translation found, return the key
+            if (value === null || value === undefined) {
+                return key;
+            }
+            
+            // If params are provided and value is a string, replace placeholders
+            if (params && typeof value === 'string') {
+                return value.replace(/\{\s*(\w+)\s*\}/g, (match, paramKey) => {
+                    return params[paramKey] !== undefined ? params[paramKey] : match;
+                });
+            }
+            
+            return value;
         }
 
         app.config.globalProperties.$trans = trans;

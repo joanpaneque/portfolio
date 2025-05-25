@@ -25,7 +25,7 @@ const submitForm = () => {
 <template>
   <div class="pt-16 scroll-mt-20" id="contact">
     <h2 class="font-semibold text-4xl md:text-5xl text-balance text-black text-center mb-8">
-      Contáctame
+      {{ $trans("joan_contact.title") }}
     </h2>
     
     <div class="bg-white p-8 md:p-16 rounded-3xl max-w-4xl mx-auto border border-gray-200">
@@ -35,9 +35,9 @@ const submitForm = () => {
           <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
           </svg>
-          <p class="text-emerald-800 font-medium">¡Mensaje enviado correctamente!</p>
+          <p class="text-emerald-800 font-medium">{{ $trans("joan_contact.success_message") }}</p>
         </div>
-        <p class="text-emerald-700 text-sm mt-1">Te responderé lo antes posible.</p>
+        <p class="text-emerald-700 text-sm mt-1">{{ $trans("joan_contact.will_answer_soon") }}</p>
       </div>
       
       <form @submit.prevent="submitForm" class="space-y-6">
@@ -46,7 +46,7 @@ const submitForm = () => {
           <!-- Name Field -->
           <div>
             <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-              Nombre *
+              {{ $trans("joan_contact.name_field") }} *
             </label>
             <input
               id="name"
@@ -54,7 +54,7 @@ const submitForm = () => {
               type="text"
               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               :class="{ 'border-red-500 focus:ring-red-500 focus:border-red-500': form.errors.name }"
-              placeholder="Tu nombre completo"
+              :placeholder="$trans('joan_contact.placeholder_name')"
             />
             <p v-if="form.errors.name" class="text-red-500 text-sm mt-1">{{ form.errors.name }}</p>
           </div>
@@ -62,7 +62,7 @@ const submitForm = () => {
           <!-- Email Field -->
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-              Email *
+              {{ $trans("joan_contact.email_field") }} *
             </label>
             <input
               id="email"
@@ -70,7 +70,7 @@ const submitForm = () => {
               type="email"
               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
               :class="{ 'border-red-500 focus:ring-red-500 focus:border-red-500': form.errors.email }"
-              placeholder="tu@email.com"
+              :placeholder="$trans('joan_contact.placeholder_email')"
             />
             <p v-if="form.errors.email" class="text-red-500 text-sm mt-1">{{ form.errors.email }}</p>
           </div>
@@ -79,7 +79,7 @@ const submitForm = () => {
         <!-- Subject Field -->
         <div>
           <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">
-            Asunto *
+            {{ $trans("joan_contact.subject_field") }} *
           </label>
           <input
             id="subject"
@@ -87,7 +87,7 @@ const submitForm = () => {
             type="text"
             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
             :class="{ 'border-red-500 focus:ring-red-500 focus:border-red-500': form.errors.subject }"
-            placeholder="¿En qué puedo ayudarte?"
+            :placeholder="$trans('joan_contact.placeholder_subject')"
           />
           <p v-if="form.errors.subject" class="text-red-500 text-sm mt-1">{{ form.errors.subject }}</p>
         </div>
@@ -95,7 +95,7 @@ const submitForm = () => {
         <!-- Message Field -->
         <div>
           <label for="message" class="block text-sm font-medium text-gray-700 mb-2">
-            Mensaje *
+            {{ $trans("joan_contact.message_field") }} *
           </label>
           <textarea
             id="message"
@@ -103,7 +103,7 @@ const submitForm = () => {
             rows="6"
             class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors resize-none"
             :class="{ 'border-red-500 focus:ring-red-500 focus:border-red-500': form.errors.message }"
-            placeholder="Cuéntame sobre tu proyecto o consulta..."
+            :placeholder="$trans('joan_contact.placeholder_message')"
           ></textarea>
           <p v-if="form.errors.message" class="text-red-500 text-sm mt-1">{{ form.errors.message }}</p>
         </div>
@@ -120,10 +120,10 @@ const submitForm = () => {
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              Enviando...
+              {{ $trans("joan_contact.sending_message") }}
             </span>
             <span v-else>
-              Enviar mensaje
+              {{ $trans("joan_contact.button_send_message") }}
             </span>
           </button>
         </div>
@@ -132,7 +132,7 @@ const submitForm = () => {
       <!-- Contact Info -->
       <div class="mt-12 pt-8 border-t border-gray-200">
         <div class="text-center">
-          <p class="text-gray-600 mb-4">También puedes contactarme directamente:</p>
+          <p class="text-gray-600 mb-4">{{ $trans("joan_contact.also_contact_me_directly") }}</p>
           <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
             <a 
               href="mailto:joanpd0@gmail.com" 

@@ -46,7 +46,7 @@ const companies = ref([
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
         <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
-          Empresas que han confiado en mi trabajo
+          {{ $trans("joan_companies.title") }}
         </h2>
       </div>
 

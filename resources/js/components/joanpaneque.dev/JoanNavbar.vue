@@ -21,17 +21,17 @@ window.addEventListener('scroll', () => {
         <div class="flex items-center">
           <a class="text-2xl font-bold text-white flex items-center gap-2" href="#home">
             <img alt="Logo" width="45" height="45" src="/images/logo.svg" />
-            <span class="ml-2">Portfolio</span>
+            <span class="ml-2">{{ $trans("joan_navbar.portfolio") }}</span>
           </a>
         </div>
         <div class="hidden md:flex items-center space-x-8">
-          <a class="text-white/80 hover:text-white transition-colors" href="#about">Sobre mí</a>
-          <a class="text-white/80 hover:text-white transition-colors" href="#projects">Proyectos</a>
-          <a class="text-white/80 hover:text-white transition-colors" href="#awards">Premios</a>
-          <a class="text-white/80 hover:text-white transition-colors" href="#contact">Contacto</a>
+          <a class="text-white/80 hover:text-white transition-colors" href="#about">{{ $trans("joan_navbar.about") }}</a>
+          <a class="text-white/80 hover:text-white transition-colors" href="#projects">{{ $trans("joan_navbar.projects") }}</a>
+          <a class="text-white/80 hover:text-white transition-colors" href="#awards">{{ $trans("joan_navbar.awards") }}</a>
+          <a class="text-white/80 hover:text-white transition-colors" href="#contact">{{ $trans("joan_navbar.contact") }}</a>
         </div>
         <div class="flex items-center space-x-4">
-          <a class="bg-white text-black px-6 py-2 rounded-full font-medium hover:bg-gray-200 transition-colors" href="#contact">Contáctame</a>
+          <a class="bg-white text-black px-6 py-2 rounded-full font-medium hover:bg-gray-200 transition-colors" href="#contact">{{ $trans("joan_navbar.contact_me") }}</a>
         </div>
       </div>
     </div>

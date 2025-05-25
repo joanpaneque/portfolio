@@ -249,7 +249,7 @@ onUnmounted(() => {
 
 <template>
     <div class="mt-20 w-full flex flex-col items-center text-center pb-4 font-bold text-sm text-gray-200 px-8 md:px-16 bg-white">
-      <span>Tecnologías que domino (+50)</span>
+      <span>{{ $trans("joan_skills.title") }}</span>
 
       <div class="overflow-hidden w-full m-8">
         <div 
@@ -260,7 +260,7 @@ onUnmounted(() => {
           <div v-if="recommendTechnologyForm.technology && filteredSkills.length === 0" class="flex flex-col items-center justify-center w-full h-full gap-4">
             <!-- Mensaje de éxito cuando se ha recomendado -->
             <span v-if="justRecommended" class="text-emerald-400 text-sm font-medium flex items-center gap-2">
-              "{{ recommendTechnologyForm.technology }}" recomendado ✅
+              {{ $trans("joan_skills.recommend_technology_success", { technology: recommendTechnologyForm.technology }) }}
               <!-- Círculo de progreso -->
               <div class="relative w-4 h-4">
                 <svg class="w-4 h-4 transform -rotate-90" viewBox="0 0 24 24">
@@ -292,7 +292,7 @@ onUnmounted(() => {
             </span>
             <!-- Mensaje cuando no se encuentra la tecnología -->
             <span v-else class="text-gray-400 text-sm italic">
-              Vaya... Aún no conozco "{{ recommendTechnologyForm.technology }}" lo suficiente bien como para ponerla aquí 😢
+              {{ $trans("joan_skills.not_found_technology", { technology: recommendTechnologyForm.technology }) }}
             </span>
             
             <!-- Contenedor de botones -->
@@ -304,10 +304,10 @@ onUnmounted(() => {
               >
                 <span v-if="isLoading">Recomendando...</span>
                 <span v-else-if="!canRecommendTechnology && timeRemaining > 0">
-                  Espera {{ formatTimeRemaining }}
+                  {{ $trans("joan_skills.wait_recommend_technology", { time_remaining: formatTimeRemaining }) }}
                 </span>
                 <span v-else-if="!canRecommendTechnology">No puedes recomendar más</span>
-                <span v-else>Recomendar "{{ recommendTechnologyForm.technology }}"</span>
+                <span v-else>{{ $trans("joan_skills.recommend_technology", { technology: recommendTechnologyForm.technology }) }}</span>
               </button>
 
               <!-- Botón de undo - solo aparece cuando hay tiempo restante -->
@@ -316,10 +316,10 @@ onUnmounted(() => {
                 @click="undoRecommendation"
                 :disabled="isUndoing"
                 class="bg-emerald-900 cursor-pointer hover:bg-emerald-800 disabled:bg-emerald-900/50 disabled:cursor-not-allowed text-white text-xs font-medium px-3 py-2 rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-opacity-50"
-                title="Deshacer recomendación"
+                :title="$trans('joan_skills.recommend_technology_undo_title')"
               >
                 <span v-if="isUndoing">...</span>
-                <span v-else>Deshacer</span>
+                <span v-else>{{ $trans("joan_skills.recommend_technology_undo") }}</span>
               </button>
             </div>
 
@@ -345,7 +345,7 @@ onUnmounted(() => {
         <input 
           v-model="recommendTechnologyForm.technology"
           type="text" 
-          placeholder="Buscar tecnología..."
+          :placeholder="$trans('joan_skills.placeholder_search_technology')"
           maxlength="15"
           class="bg-white/10 border border-emerald-900/20 text-black text-sm px-4 py-2 rounded-full focus:outline-none focus:border-emerald-500 focus:bg-white/15 transition-all duration-300 placeholder-gray-400 w-64"
           @input="onInputChange"

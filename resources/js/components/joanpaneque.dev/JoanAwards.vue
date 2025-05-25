@@ -3,10 +3,10 @@
         <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 lg:px-8">
             <div class="text-center mb-12 pt-8">
                 <h2 class="text-3xl md:text-5xl font-bold text-black">
-                    Premios y reconocimientos
+                    {{ $trans("joan_awards.title") }}
                 </h2>
                 <p class="text-gray-600 mt-4 max-w-2xl mx-auto">
-                    Reconocimientos y logros obtenidos a lo largo de mi carrera profesional.
+                    {{ $trans("joan_awards.description") }}
                 </p>
             </div>
 
@@ -67,84 +67,7 @@
 <script setup>
 import { ref } from 'vue'
 
-const awards = ref([
-    {
-        title: 'La nota más alta de Figueres en grado superior',
-        organization: 'Ajuntament de Figueres',
-        date: 'Noviembre 2023',
-        description: 'Reconocimiento por tener la nota más alta en grado superior de la ciudad de Figueres, Catalunya.',
-        image: '/images/awards/premis-talent.webp',
-        newsSources: [
-            {
-                headline: 'Les tres millors notes de la Formació Professional de Grau Superior',
-                image: '/images/news-logos/diari-emporda.png',
-                link: 'https://www.emporda.info/comarca/2024/10/19/els-premis-figueres-talent-reconeixen-esforc-i-la-trajectoria-formativa-39-estudiants-109626111.html',
-                publication: 'Diari Empordà'
-            },
-            {
-                headline: 'Figueres lliura els premis a l\'Excel·lència Acadèmica a 39 alumnes',
-                image: '/images/news-logos/diari-de-girona.svg',
-                link: 'https://www.diariodegironella.cat/2024/10/19/figueres-lliura-els-premis-a-l-excelencia-academica-a-39-alumnes/',
-                publication: 'Diari de Girona'
-            },
-            {
-                headline: 'Figueres lliura els premis a l\'Excel·lència Acadèmica a 39 alumnes',
-                image: '/images/news-logos/diari-de-figueres.png',
-                link: 'https://www.figueres.cat/actualitat/noticies/figueres-lliura-els-premis-a-l-excel-lencia-academica-23620',
-                publication: 'Diari de Figueres'
-            },
-            {
-                headline: 'Los premios Figueres Talent reconocen el esfuerzo y la buena trayectoria formativa de 39 estudiantes de la ciudad',
-                image: '/images/news-logos/la-ciutat.png',
-                link: 'https://laciutat.cat/es/laciutatdegirona-es/figueres-es/premios-figueres-talent-esforc-trayectoria-formativa-39-estudiantes',
-                publication: 'La Ciutat'
-            }
-        ]
-    },
-    {
-        title: 'Matrícula de Honor',
-        organization: 'Institut Cendrassos',
-        date: 'Junio 2023',
-        description: 'Reconocimiento por la excelencia académica en el Instituto Cendrassos.',
-        image: '/images/awards/graduacio.png',
-    },
-    {
-        title: 'Premi Bonaplata Joves 2024',
-        organization: 'Associació del Museu de la Ciència i la Tècnica i d\'Arqueologia Industrial de Catalunya',
-        date: 'Junio 2023',
-        description: 'El projecte guanyador és una aplicació desenvolupada en col·laboració amb l’Hospital Trueta de Girona. Aquesta eina facilita el procés de selecció de l’antibiòtic més adequat per a cada intervenció quirúrgica, optimitzant-ne l’ús i ajudant a millorar la gestió en l’àmbit hospitalari. Actualment, l’aplicació ja s’està utilitzant en un entorn real, demostrant la seva utilitat i impacte positiu.',
-        image: '/images/awards/bonaplata.webp',
-        newsSources: [
-            {
-                headline: 'Alumnes de 2n DAW guanyen els premis Bonaplata Joves 2024',
-                image: '/images/news-logos/cendrassos.webp',
-                link: 'https://cendrassos.net/alumnes-de-2n-daw-guanyen-els-premis-bonaplata-joves-2024/',
-                publication: 'Institut Cendrassos'
-            }
-        ]
-    },
-    {
-        title: 'Premio al mejor proyecto tecnológico en ámbito STEAM del año',
-        organization: 'Universitat de Girona',
-        date: 'Diciembre 2022',
-        description: 'Premio al mejor proyecto tecnológico en ámbito STEAM del año',
-        image: '/images/awards/premis-consell-social.jpg',
-        newsSources: [
-            {
-                headline: 'El Consell Social de la UdG premia quatre projectes d’estudiants de cicles',
-                image: '/images/news-logos/el-punt-avui.png',
-                link: 'https://www.elpuntavui.cat/societat/article/16-educacio/2462135-el-consell-social-de-la-udg-premia-quatre-projectes-d-estudiants-de-cicles.html',
-                publication: 'El Punt Avui'
-            },
-            {
-                headline: 'El Consell Social de la UdG premia quatre projectes d’estudiants de cicles',
-                image: '/images/news-logos/patronat-udg.svg',
-                link: 'https://patronateps.udg.edu/el-consell-social-de-la-udg-premia-quatre-projectes-destudiants-de-cicles/',
-                publication: 'Universitat de Girona'
-            }
-        ]
-    }
-])
+const awards = $trans("joan_awards.awards");
 </script>
 
 <style scoped>
