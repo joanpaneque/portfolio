@@ -179,5 +179,8 @@ return [
         'placeholder_email' => 'your@email.com',
         'placeholder_subject' => 'How can I help you?',
         'placeholder_message' => 'Tell me about your project or inquiry...',
+    ],
+    'joan_footer' => [
+        'text' => '© {currentYear} Joan Paneque Domingo. All rights reserved.',
     ]
 ];

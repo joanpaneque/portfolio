@@ -179,5 +179,8 @@ return [
         'placeholder_email' => 'tu@email.com',
         'placeholder_subject' => '¿En qué puedo ayudarte?',
         'placeholder_message' => 'Cuéntame sobre tu proyecto o consulta...',
+    ],
+    'joan_footer' => [
+        'text' => '© {currentYear} Joan Paneque Domingo. Todos los derechos reservados.',
     ]
 ];
