@@ -6,30 +6,23 @@ use Inertia\Inertia;
 use App\Http\Middleware\Auth\IsAdmin;
 use App\Http\Middleware\RedirectToLocale;
 use App\Http\Controllers\PortfolioController;
-// Route::get('/', function () {
-//     return Inertia::render('Welcome');
-// })->name('index.portfolio');
-
-
-// outside test
-Route::get('/outside', function () {
-    return Inertia::render('Outside');
-})->name('outside');
+use App\Http\Controllers\BlogController;
 
 
 
-// redirect '/' to portfolio.index
+
 Route::get('/', function () {
     return redirect()->route('portfolio.index', ['locale' => 'undefined']);
 });
 
 // lang prefix for all routes inside this block
 Route::group(['prefix' => '{locale}', 'middleware' => RedirectToLocale::class], function () {
-    Route::get('/', [PortfolioController::class, 'index'])->name('portfolio.index');
+    // redirect '/' to portfolio.index
+    Route::redirect('/', '/portfolio');
 
-    Route::get('/test', function () {
-        return Inertia::render('Test');
-    })->name('test');
+    Route::get('/portfolio', [PortfolioController::class, 'index'])->name('portfolio.index');
+    Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+
 
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
