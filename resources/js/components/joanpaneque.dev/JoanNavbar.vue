@@ -1,6 +1,48 @@
 <script setup>
 import { ref } from 'vue';
 
+
+const props = defineProps({
+  title: {
+    type: String,
+    required: true,
+    default: () => $trans('joan_navbar.portfolio'),
+  },
+  routes: {
+    type: Object,
+    required: true,
+    default: () => ([
+        {
+            name: $trans('joan_navbar.about'),
+            href: '#about',
+        },
+        {
+            name: $trans('joan_navbar.projects'),
+            href: '#projects',
+        },
+        {
+            name: $trans('joan_navbar.awards'),
+            href: '#awards',
+        },
+        {
+            name: $trans('joan_navbar.contact'),
+            href: '#contact',
+        },
+    ]),
+  },
+  buttons: {
+    type: Object,
+    required: true,
+    default: () => ([
+        {
+            name: $trans('joan_navbar.contact_me'),
+            href: '#contact',
+        },
+    ]),
+  },
+
+});
+
 const scrollPosition = ref(0);
 const isMenuOpen = ref(false);
 
@@ -30,20 +72,22 @@ const closeMenu = () => {
         <div class="flex items-center">
           <a class="text-2xl font-bold text-white flex items-center gap-2" href="#home" @click="closeMenu">
             <img alt="Logo" width="45" height="45" src="/images/logo.svg" />
-            <span class="ml-2">{{ $trans("joan_navbar.portfolio") }}</span>
+            <span class="ml-2">{{ title }}</span>
           </a>
         </div>
 
         <!-- Desktop Menu -->
         <div class="hidden md:flex items-center space-x-8">
-          <a class="text-white/80 hover:text-white transition-colors" href="#about">{{ $trans("joan_navbar.about") }}</a>
+          <!-- <a class="text-white/80 hover:text-white transition-colors" href="#about">{{ $trans("joan_navbar.about") }}</a>
           <a class="text-white/80 hover:text-white transition-colors" href="#projects">{{ $trans("joan_navbar.projects") }}</a>
           <a class="text-white/80 hover:text-white transition-colors" href="#awards">{{ $trans("joan_navbar.awards") }}</a>
-          <a class="text-white/80 hover:text-white transition-colors" href="#contact">{{ $trans("joan_navbar.contact") }}</a>
+          <a class="text-white/80 hover:text-white transition-colors" href="#contact">{{ $trans("joan_navbar.contact") }}</a> -->
+          <a v-for="route in routes" :key="route.name" class="text-white/80 hover:text-white transition-colors" :href="route.href">{{ route.name }}</a>
         </div>
 
         <div class="flex items-center space-x-4">
-          <a class="hidden md:block bg-white text-black px-6 py-2 rounded-full font-medium hover:bg-gray-200 transition-colors" href="#contact">{{ $trans("joan_navbar.contact_me") }}</a>
+          <!-- <a class="hidden md:block bg-white text-black px-6 py-2 rounded-full font-medium hover:bg-gray-200 transition-colors" href="#contact">{{ $trans("joan_navbar.contact_me") }}</a> -->
+          <a v-for="button in buttons" :key="button.name" class="hidden md:block bg-white text-black px-6 py-2 rounded-full font-medium hover:bg-gray-200 transition-colors" :href="button.href">{{ button.name }}</a>
 
           <!-- Hamburger Button -->
           <button
@@ -83,11 +127,13 @@ const closeMenu = () => {
         class="md:hidden py-4 border-t border-dotted border-white/30 pb-6 animate-fadeIn"
       >
         <div class="flex flex-col space-y-4">
-          <a class="text-white/80 hover:text-white transition-colors py-2" href="#about" @click="closeMenu">{{ $trans("joan_navbar.about") }}</a>
+          <!-- <a class="text-white/80 hover:text-white transition-colors py-2" href="#about" @click="closeMenu">{{ $trans("joan_navbar.about") }}</a>
           <a class="text-white/80 hover:text-white transition-colors py-2" href="#projects" @click="closeMenu">{{ $trans("joan_navbar.projects") }}</a>
           <a class="text-white/80 hover:text-white transition-colors py-2" href="#awards" @click="closeMenu">{{ $trans("joan_navbar.awards") }}</a>
-          <a class="text-white/80 hover:text-white transition-colors py-2" href="#contact" @click="closeMenu">{{ $trans("joan_navbar.contact") }}</a>
-          <a class="bg-white text-black px-6 py-2 rounded-full font-medium hover:bg-gray-200 transition-colors w-full text-center mt-4" href="#contact" @click="closeMenu">{{ $trans("joan_navbar.contact_me") }}</a>
+          <a class="text-white/80 hover:text-white transition-colors py-2" href="#contact" @click="closeMenu">{{ $trans("joan_navbar.contact") }}</a> -->
+          <a v-for="route in routes" :key="route.name" class="text-white/80 hover:text-white transition-colors py-2" :href="route.href" @click="closeMenu">{{ route.name }}</a>
+          <!-- <a class="bg-white text-black px-6 py-2 rounded-full font-medium hover:bg-gray-200 transition-colors w-full text-center mt-4" href="#contact" @click="closeMenu">{{ $trans("joan_navbar.contact_me") }}</a> -->
+          <a v-for="button in buttons" :key="button.name" class="bg-white text-black px-6 py-2 rounded-full font-medium hover:bg-gray-200 transition-colors w-full text-center mt-4" :href="button.href" @click="closeMenu">{{ button.name }}</a>
         </div>
       </div>
     </div>

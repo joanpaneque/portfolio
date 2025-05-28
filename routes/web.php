@@ -22,6 +22,7 @@ Route::group(['prefix' => '{locale}', 'middleware' => RedirectToLocale::class], 
 
     Route::get('/portfolio', [PortfolioController::class, 'index'])->name('portfolio.index');
     Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+    Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
 
     Route::get('/dashboard', function () {
@@ -30,9 +31,10 @@ Route::group(['prefix' => '{locale}', 'middleware' => RedirectToLocale::class], 
 });
 
 
-
-
-
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
 require __DIR__.'/api.php';
+
+Route::get('{path}', function ($path) {
+    return response('', 404);
+})->where('path', '.*')->middleware(RedirectToLocale::class);

@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div class="relative pt-20 bg-[#002626] text-white scroll-mt-20" id="home">
+  <div class="relative bg-[#002626] text-white scroll-mt-20" id="home">
     <div class="mx-auto max-w-6xl px-4 min-h-[80vh] flex flex-col justify-center">
       <div class="flex flex-col md:flex-row items-center my-8 md:my-0">
         <div class="text-left py-16 flex-1">
@@ -32,4 +32,4 @@
       </div>
     </div>
   </div>
-</template> 
+</template>

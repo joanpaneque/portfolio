@@ -55,12 +55,16 @@ class RedirectToLocale
         }
 
         $firstSegmentInLocales = in_array($firstSegment, $locales);
+        // dd the request path
+        // dd($request->path());
         if (
             $firstSegmentInLocales ||
             $request->is('api/*') ||
             $request->is('storage/*') ||
-            $request->is('assets/*')
+            $request->is('assets/*') ||
+            $request->is('admin/*')
         ) {
+            // dd("sadsd");
             if ($firstSegmentInLocales) {
                 app()->setLocale($firstSegment);
                 $this->shareTranslations();

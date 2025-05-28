@@ -11,4 +11,9 @@ class BlogController extends Controller
     {
         return Inertia::render('Blog/Index');
     }
+
+    public function show($slug)
+    {
+        return Inertia::render('Blog/Show');
+    }
 }
