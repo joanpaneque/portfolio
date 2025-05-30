@@ -10,6 +10,10 @@ use App\Http\Controllers\BlogController;
 
 
 
+require __DIR__.'/admin.php';
+require __DIR__.'/settings.php';
+require __DIR__.'/auth.php';
+require __DIR__.'/api.php';
 
 Route::get('/', function () {
     return redirect()->route('portfolio.index', ['locale' => 'undefined']);
@@ -23,17 +27,10 @@ Route::group(['prefix' => '{locale}', 'middleware' => RedirectToLocale::class], 
     Route::get('/portfolio', [PortfolioController::class, 'index'])->name('portfolio.index');
     Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
     Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
-
-
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->middleware(['auth', 'verified', IsAdmin::class])->name('dashboard');
 });
 
 
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
-require __DIR__.'/api.php';
+
 
 Route::get('{path}', function ($path) {
     return response('', 404);

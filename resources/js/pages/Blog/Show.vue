@@ -2,7 +2,7 @@
 import JoanLayout from '@/layouts/joanpaneque.dev/JoanLayout.vue';
 import NewsletterSubscription from '@/components/joanpaneque.dev/NewsletterSubscription.vue';
 import { Head } from '@inertiajs/vue3';
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref } from 'vue';
 
 // Props que vendrían del backend
 const props = defineProps({
@@ -168,54 +168,11 @@ const shareArticle = (platform) => {
         window.open(shareUrls[platform], '_blank', 'width=600,height=400');
     }
 };
-
-// Progreso de lectura
-const readingProgress = ref(0);
-
-const updateReadingProgress = () => {
-    if (typeof window === 'undefined') return;
-
-    const article = document.querySelector('.article-content');
-    if (!article) return;
-
-    const articleTop = article.offsetTop;
-    const articleHeight = article.offsetHeight;
-    const windowHeight = window.innerHeight;
-    const scrollTop = window.scrollY;
-
-    const progress = Math.min(
-        Math.max((scrollTop - articleTop + windowHeight) / articleHeight, 0),
-        1
-    );
-
-    readingProgress.value = progress * 100;
-};
-
-// Lifecycle hooks para manejar el scroll listener
-onMounted(() => {
-    if (typeof window !== 'undefined') {
-        window.addEventListener('scroll', updateReadingProgress);
-    }
-});
-
-onUnmounted(() => {
-    if (typeof window !== 'undefined') {
-        window.removeEventListener('scroll', updateReadingProgress);
-    }
-});
 </script>
 
 <template>
     <Head :title="title" />
     <JoanLayout :title="'Blog'" :routes="routes" :buttons="buttons">
-        <!-- Progress Bar -->
-        <div class="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
-            <div
-                class="h-full bg-[#002626] transition-all duration-150 ease-out"
-                :style="{ width: `${readingProgress}%` }"
-            ></div>
-        </div>
-
         <!-- Article Header -->
         <div class="bg-[#002626] text-white py-16">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

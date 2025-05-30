@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Services\RecommendTechnologyService;
-
+use App\Models\ContactMessage;
 class PortfolioController extends Controller
 {
     public function index(Request $request) {
@@ -13,7 +13,7 @@ class PortfolioController extends Controller
         $sessionId = $request->session()->getId();
         $canRecommendData = RecommendTechnologyService::canRecommendTechnology(null, $sessionId);
         $lastRecommendedTechnology = RecommendTechnologyService::getLastRecommendedTechnology($sessionId);
-        
+
         return Inertia::render('Portfolio', [
             "canRecommendTechnology" => $canRecommendData["success"],
             "lastRecommendedTechnology" => $lastRecommendedTechnology,
@@ -42,18 +42,14 @@ class PortfolioController extends Controller
 
         // Here you would typically send an email or save to database
         // For now, we'll just log the contact form submission
-        \Log::info('Contact form submitted', [
+        ContactMessage::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'subject' => $validated['subject'],
             'message' => $validated['message'],
-            'ip' => $request->ip(),
+            'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
-            'timestamp' => now(),
         ]);
-
-        // You could also send an email here:
-        // Mail::to('joanpd0@gmail.com')->send(new ContactFormMail($validated));
 
         return back()->with('success', 'Mensaje enviado correctamente. Te responderé lo antes posible.');
     }
@@ -91,4 +87,5 @@ class PortfolioController extends Controller
             "timeRemaining" => $canRecommendData["timeRemaining"]
         ]);
     }
+
 }
