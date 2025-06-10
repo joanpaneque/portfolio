@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\Auth\IsAdmin;
+use App\Models\ReferrerConnection;
 
 use Inertia\Inertia;
 
@@ -68,6 +69,32 @@ Route::group(['prefix' => 'admin', 'middleware' => [IsAdmin::class]], function (
     Route::get('/blog/{id}/edit', function ($id) {
         return Inertia::render('Admin/Blog/Edit', ['id' => $id]);
     })->name('admin.blog.edit');
+
+    // Referrers Management
+    Route::get('/referrers', function () {
+        $referrers = ReferrerConnection::orderBy('created_at', 'desc')->get();
+
+        return Inertia::render('Admin/Referrers', [
+            'referrers' => $referrers
+        ]);
+    })->name('admin.referrers');
+
+    Route::delete('/referrers/{id}', function ($id) {
+        try {
+            $referrer = ReferrerConnection::findOrFail($id);
+            $referrer->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Referrer eliminado correctamente'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar el referrer'
+            ], 500);
+        }
+    })->name('admin.referrers.destroy');
 
     // Settings
     Route::get('/settings', function () {
